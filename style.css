@@ -1,0 +1,59 @@
+body {
+	font-family: "Consolas", monospace;
+	font-size: 15pt;
+	padding-left: 6%;
+	padding-right: 6%;
+    color: #d3d3d3;
+    background-color: #1c1c1c;
+}
+div.center {
+    margin: auto;
+    width: 50%;
+}
+.banner {
+    font-size: 26pt;
+    margin: auto;
+    width: 50%;
+}
+table {
+	border-collapse: collapse;
+	width: auto;
+}
+td, th {
+	border: 1px solid #e6e6e6;
+	text-align: left;
+	padding: 8px;
+}
+div.navs {
+    padding-left: 2%;
+    margin: auto;
+    width: 50%;
+}
+
+pre.line {
+    text-overflow: "";
+    overflow: clip;
+    white-space: nowrap;
+    margin: auto;
+}
+
+a { color: #00c0da }
+ul { margin: 5px; }
+div.navbutton { display: inline-block; }
+
+
+@media only screen and (max-device-width: 700px) {
+	body { font-size: 12pt; }
+	div#title { font-size: 50%; }
+	table { width: 100% }
+	ol { margin-left: 20px; }
+	div.navbutton { font-size: 120%; }
+	div.float {
+		float: none;
+		margin-right: 0px;
+	}
+	table.stats {
+		width: 100%;
+		margin-left: 0px;
+	}
+}
