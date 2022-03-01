@@ -7,7 +7,7 @@ body {
     background-color: #1c1c1c;
 }
 div.center {
-    margin: auto;
+    margin: 0 auto;
     width: 50%;
 }
 .banner {
@@ -24,10 +24,15 @@ td, th {
 	text-align: left;
 	padding: 8px;
 }
+/*
+Nav Buttons
+*/
 div.navs {
-    padding-left: 2%;
     margin: auto;
-    width: 50%;
+}
+div.navbutton { 
+    display: inline-block;
+    margin: 0 auto
 }
 
 pre.line {
@@ -39,7 +44,7 @@ pre.line {
 
 a { color: #00c0da }
 ul { margin: 5px; }
-div.navbutton { display: inline-block; }
+
 
 
 @media only screen and (max-device-width: 700px) {
