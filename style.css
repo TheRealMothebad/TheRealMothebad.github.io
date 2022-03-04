@@ -5,6 +5,14 @@ body {
 	padding-right: 6%;
     color: #d3d3d3;
     background-color: #1c1c1c;
+	margin:0
+}
+div.pad-s {
+	padding-left: 6%;
+	padding-right: 6%;
+}
+div.pad-l {
+	padding-left: 25%;
 }
 div.center {
     margin: 0 auto;
@@ -45,6 +53,23 @@ pre.line {
 a { color: #00c0da }
 ul { margin: 5px; }
 
+
+/*
+top golf
+*/
+hr {
+	color:#2c2c2c;
+}
+img {
+	width: 50%;
+}
+#side-nav{
+	width:20%;
+	background:#1c1c1c;
+	border:1px solid #e6e6e6;
+	position:fixed;/* for good browsers */
+	left:0;
+}
 
 
 @media only screen and (max-device-width: 700px) {
