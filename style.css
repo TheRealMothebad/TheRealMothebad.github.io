@@ -13,6 +13,7 @@ div.pad-s {
 }
 div.pad-l {
 	padding-left: 25%;
+	padding-right: 6%;
 }
 div.center {
     margin: 0 auto;
@@ -61,12 +62,12 @@ hr {
 	color:#2c2c2c;
 }
 img {
-	width: 80%;
+	width: 100%;
 }
 #side-nav{
 	width:20%;
 	background:#1c1c1c;
-	border:1px solid #e6e6e6;
+	border:2px solid #e6e6e667;
 	position:fixed;/* for good browsers */
 	left:0;
 }
