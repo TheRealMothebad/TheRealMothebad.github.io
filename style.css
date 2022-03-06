@@ -7,6 +7,9 @@ body {
     background-color: #1c1c1c;
 	margin:0
 }
+h1 {
+	font-size: 40pt;
+}
 div.pad-s {
 	padding-left: 6%;
 	padding-right: 6%;
