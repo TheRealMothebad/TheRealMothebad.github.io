@@ -36,6 +36,14 @@ td, th {
 	text-align: left;
 	padding: 8px;
 }
+ul.nav {
+	border: 1px solid #ffffff00;
+	text-align: right;
+	list-style: none;
+	font-size: larger;
+	margin-right: 20%;
+}
+
 p.smol {
 	font-size: 70%;
 	margin-bottom: 5px;
@@ -47,7 +55,7 @@ h1.no-top {margin-top: 0%;}
 Nav Buttons
 */
 div.navs {
-    margin: auto;
+    margin:auto;
 }
 div.navbutton { 
     display: inline-block;
@@ -75,9 +83,8 @@ img {
 	width: 100%;
 }
 #side-nav{
-	width:20%;
-	background:#1c1c1c;
-	border:2px solid #e6e6e667;
+	width:25%;
+	background:#ffffff00;
 	position:fixed;/* for good browsers */
 	left:0;
 }
