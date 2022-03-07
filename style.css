@@ -47,9 +47,7 @@ h1.no-top {margin-top: 0%;}
 Nav Buttons
 */
 div.navs {
-    width:100%;
-  	display: flex;
-  	justify-content: center;
+    margin: auto;
 }
 div.navbutton { 
     display: inline-block;
