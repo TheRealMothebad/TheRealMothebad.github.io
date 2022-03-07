@@ -36,11 +36,20 @@ td, th {
 	text-align: left;
 	padding: 8px;
 }
+p.smol {
+	font-size: 70%;
+	margin-bottom: 5px;
+	margin-left: 5%;
+	margin-top: 5%;
+}
+h1.no-top {margin-top: 0%;}
 /*
 Nav Buttons
 */
 div.navs {
-    margin: auto;
+    width:100%;
+  	display: flex;
+  	justify-content: center;
 }
 div.navbutton { 
     display: inline-block;
