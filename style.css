@@ -68,9 +68,10 @@ div.navbutton {
 
 div.line {
     text-overflow: "";
-    overflow: clip;
+    overflow: hidden;
     white-space: nowrap;
     margin: auto;
+    width: 100%;
 }
 
 a { color: #00c0da }
