@@ -1,3 +1,4 @@
+html { overflow-y: scroll;}
 body {
 	font-family: "Consolas", monospace;
 	font-size: 15pt;
@@ -25,7 +26,7 @@ div.center {
 .banner {
     font-size: 26pt;
     margin: auto;
-    width: 50%;
+	max-width: fit-content;
 }
 table {
 	border-collapse: collapse;
@@ -62,7 +63,7 @@ div.navbutton {
     margin: 0 auto
 }
 
-pre.line {
+div.line {
     text-overflow: "";
     overflow: clip;
     white-space: nowrap;
