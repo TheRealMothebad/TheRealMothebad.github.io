@@ -26,6 +26,7 @@ div.center {
 .banner {
     font-size: 26pt;
     margin: auto;
+	max-width: -moz-fit-content;
 	max-width: fit-content;
 }
 table {
@@ -42,7 +43,9 @@ ul.nav {
 	text-align: right;
 	list-style: none;
 	font-size: larger;
-	margin-right: 20%;
+	margin-right: 18%;
+	text-overflow: "|";
+    white-space: nowrap;
 }
 
 p.smol {
@@ -84,12 +87,31 @@ img {
 	width: 100%;
 }
 #side-nav{
-	width:25%;
+	width: 25%;
 	background:#ffffff00;
-	position:fixed;/* for good browsers */
-	left:0;
+	position: fixed;/* for good browsers */
+	left :0;
+	display: inline-block;
 }
+div.nav {
+	display: inline-block;
+	text-align: end;
+	margin-left: 25%;
+}
+p.nav-line {
+	margin: 0%;
+	width: 8px;
+}
+div.nav-line {display: inline-block;}
 
+div.b-hide {display: none;}
+div.s-hide {display: none;}
+div.xs-hide {display: none;}
+
+@media only screen and (max-device-width: 1050px) {
+	#side-nav { font-size: medium;}
+	div.b-hide {display: block;}
+}
 
 @media only screen and (max-device-width: 700px) {
 	body { font-size: 12pt; }
@@ -105,5 +127,12 @@ img {
 		width: 100%;
 		margin-left: 0px;
 	}
-	#side-nav { position: absolute; }
+	#side-nav { 
+		font-size: 10pt;
+	}
+	div.s-hide {display: block;}
+}
+
+@media only screen and (max-device-width: 475px) {
+	div.xs-hide {display: block;}
 }
