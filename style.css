@@ -134,6 +134,22 @@ div.xs-hide {display: none;}
 	div.s-hide {display: block;}
 }
 
+
+iframe.desktop {
+	display: block;
+}
+iframe.mobile {
+	display: none;
+}
+@media only screen and (max-device-width: 500px) {
+	iframe.desktop {
+		display: none;
+	}
+	iframe.mobile {
+		display: block;
+	}
+}
+
 @media only screen and (max-device-width: 475px) {
 	div.xs-hide {display: block;}
 }
