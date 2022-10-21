@@ -76,6 +76,11 @@ div.line {
 a { color: #00c0da }
 ul { margin: 5px; }
 
+.half-child {
+	float: left;
+	width: 45%;
+}
+
 
 /*
 top golf
