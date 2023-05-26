@@ -1,0 +1,107 @@
+<!-- [[Boggle Scraper]] -->
+<!-- ||4|| -->
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>John Umbriac</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+  <body>
+  <div id="title">
+      <pre class="banner">John
+    Umbriac's
+           Website</pre>
+</div>
+
+<div class="line">
+  <pre>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
+</div>
+
+
+  <div style="text-align: center;">
+  <div class="navs">
+    <div class="navbutton">+------+<br>| <a href="index.html">Home</a> |<br>+------+</div>
+    <div class="navbutton">+-------+<br>| <a href="links.html">Links</a> |<br>+-------+</div>
+    <div class="navbutton">+-----------+<br>| <a href="portfolio.html">Portfolio</a> |<br>+-----------+</div>
+    <div class="navbutton">+--------+<br>| <a href="nerdle.html">Nerdle</a> |<br>+--------+</div>
+    <div class="navbutton">+----------------+<br>| <strong>Boggle Scraper</strong> |<br>+----------------+</div>
+    <div class="navbutton">+-------------+<br>| <a href="photos.html">Photography</a> |<br>+-------------+</div>
+    
+  </div>
+</div>
+
+  
+  <body>
+    <h1>Welcome to the Internet!</h1>
+    <h2>THIS IS A WORK IN PROGRESS, IT IS PROBABLY BROKEN, AND DELIBERATELY NOT AESTHETIC</h2>
+    <p>Press the button to receive da data :)</p>
+
+    <table>
+      <tr>
+        <td><input name="0" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="1" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="2" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="3" type="text" maxlength="1" class="board_square"/></td>
+      </tr>
+      <tr>
+        <td><input name="4" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="5" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="6" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="7" type="text" maxlength="1" class="board_square"/></td>
+      </tr>
+      <tr>
+        <td><input name="8" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="9" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="10" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="11" type="text" maxlength="1" class="board_square"/></td>
+      </tr>
+      <tr>
+        <td><input name="12" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="13" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="14" type="text" maxlength="1" class="board_square"/></td>
+        <td><input name="15" type="text" maxlength="1" class="board_square"/></td>
+      </tr>
+    </table>
+
+    <button onclick="sendBoard()">Scrape board</button>
+
+    <div id="result_div"></div>
+
+    <script>
+
+      function filterField(e) {
+        let t = e.target;
+        let badValues = /[^a-z]/gi;
+        t.value = t.value.replace(badValues, '');
+      }
+      
+      for(i = 0; i < 16; i++) {
+        document.getElementsByClassName("board_square")[i].addEventListener('input', filterField);
+      }
+
+      const xhr = new XMLHttpRequest();
+
+      function sendBoard() {
+        boardContents = ""
+        for(i = 0; i < 16; i++) {
+          boardContents += document.getElementsByClassName("board_square")[i].value;
+        }
+
+        xhr.open("POST", "http://127.0.0.1:7878/" + boardContents);
+        xhr.send();
+        xhr.responseType = "text";
+        xhr.onload = () => {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            const data = xhr.response;
+            document.getElementById("result_div").innerHTML += "<p>" + data + "</p>";
+          } else {
+            console.log(`Error: ${xhr.status}`);
+          }
+        };
+      }
+
+    </script>
+  </body>
+</html>
