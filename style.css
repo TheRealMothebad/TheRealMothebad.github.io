@@ -63,7 +63,9 @@ div.navs {
 }
 div.navbutton { 
     display: inline-block;
-    margin: 0 auto
+    margin: 0 auto;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 div.line {
