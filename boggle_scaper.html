@@ -34,9 +34,14 @@
 
   
   <body>
-    <h1>Welcome to the Internet!</h1>
+    <h2>Welcome to:</h2>
+    <pre>░░░░░░   ░░░░░░   ░░░░░░   ░░░░░░  ░░      ░░░░░░░     ░░░░░░░  ░░░░░░ ░░░░░░   ░░░░░  ░░░░░░  ░░░░░░░ ░░░░░░ 
+▒▒   ▒▒ ▒▒    ▒▒ ▒▒       ▒▒       ▒▒      ▒▒          ▒▒      ▒▒      ▒▒   ▒▒ ▒▒   ▒▒ ▒▒   ▒▒ ▒▒      ▒▒   ▒▒
+▒▒▒▒▒▒  ▒▒    ▒▒ ▒▒   ▒▒▒ ▒▒   ▒▒▒ ▒▒      ▒▒▒▒▒       ▒▒▒▒▒▒▒ ▒▒      ▒▒▒▒▒▒  ▒▒▒▒▒▒▒ ▒▒▒▒▒▒  ▒▒▒▒▒   ▒▒▒▒▒▒ 
+▓▓   ▓▓ ▓▓    ▓▓ ▓▓    ▓▓ ▓▓    ▓▓ ▓▓      ▓▓               ▓▓ ▓▓      ▓▓   ▓▓ ▓▓   ▓▓ ▓▓      ▓▓      ▓▓   ▓▓
+██████   ██████   ██████   ██████  ███████ ███████     ███████  ██████ ██   ██ ██   ██ ██      ███████ ██   ██</pre>
     <h2>THIS IS A WORK IN PROGRESS, IT IS PROBABLY BROKEN, AND DELIBERATELY NOT AESTHETIC</h2>
-    <p>Press the button to receive da data :)</p>
+    <p>Enter a boggle board, and press the button to find all the words contained therein!</p>
 
     <table>
       <tr>
@@ -89,15 +94,19 @@
           boardContents += document.getElementsByClassName("board_square")[i].value;
         }
 
-        xhr.open("POST", "http://127.0.0.1:7878/" + boardContents);
+        xhr.open("POST", "http://server.john.umbriac.com:7878/" + boardContents);
         xhr.send();
         xhr.responseType = "text";
+        xhr.onerror = () => {
+          document.getElementById("result_div").innerHTML = "<p> Error: Server is currently unreachable." +
+             "<br>This is likely due to a loss of internet connection for either your computer, or the server (but probably the server).<br>If the problem persists, email john@umbriac.com so he can fix it.</p>";
+        }
         xhr.onload = () => {
           if (xhr.readyState == 4 && xhr.status == 200) {
             const data = xhr.response;
-            document.getElementById("result_div").innerHTML += "<p>" + data + "</p>";
+            document.getElementById("result_div").innerHTML = "<p>" + data + "</p>";
           } else {
-            console.log(`Error: ${xhr.status}`);
+            document.getElementById("result_div").innerHTML = "<p> Error: " + xhr.status + "</p>";
           }
         };
       }
