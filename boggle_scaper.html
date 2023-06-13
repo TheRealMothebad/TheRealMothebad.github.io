@@ -94,7 +94,7 @@
           boardContents += document.getElementsByClassName("board_square")[i].value;
         }
 
-        xhr.open("POST", "http://server.john.umbriac.com:7878/" + boardContents);
+        xhr.open("POST", "https://server.john.umbriac.com:7878/" + boardContents);
         xhr.send();
         xhr.responseType = "text";
         xhr.onerror = () => {
