@@ -33,6 +33,12 @@ table {
 	border-collapse: collapse;
 	width: auto;
 }
+table.board_square {
+	border:1px solid black;	
+}
+input {
+	width: 10px;
+}
 td, th {
 	border: 1px solid #e6e6e6;
 	text-align: left;
@@ -63,7 +69,9 @@ div.navs {
 }
 div.navbutton { 
     display: inline-block;
-    margin: 0 auto
+    margin: 0 auto;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 div.line {
