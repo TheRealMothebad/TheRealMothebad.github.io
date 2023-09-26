@@ -7,31 +7,10 @@ let offscreenCanvas = null
 let offscreenCtx = null
 
 const board = init_board()
-/*
-const board = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-           [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]]
-*/
 
 let square_size_x = null
 let square_size_y = null
+let grid_line_size = 1
 
 const up = {x: 0, y: -1}
 const down = {x: 0, y: 1}
@@ -72,8 +51,6 @@ function onLoaded() {
 
   gravity_interval_object = window.setInterval(doGravity, gravity_interval_time);
   
-  clear_thresholds[0] = 74
-  clear_thresholds[1] = 66
   active.get_cow_rot()
   console.log(pretty_print_board())
   console.log(pretty_print_quadrant())
@@ -106,6 +83,9 @@ function handleKeyPress(event) {
     case "x":
       rot = 1
       break;
+    case "p":
+      clearInterval(gravity_interval_object)
+      return
     case " ":
       active.drop()
       return
@@ -183,6 +163,18 @@ class Tetromino {
       return false
     }
     return true
+  }
+
+  find_drop() {
+    var old_blocks = this.blocks
+    var new_blocks = this.blocks
+    var center = this.center
+    while (!this.is_obstructed(new_blocks)) {
+      old_blocks = new_blocks
+      center = {x: center.x + gravity_dir.x, y: center.y + gravity_dir.y}
+      new_blocks = this.get_blocks(center, this.rotation)
+    }
+    return old_blocks
   }
 
   is_obstructed(blocks) {
@@ -286,6 +278,7 @@ function calc_quadrant(block) {
 function clear_lines(lines) {
   console.log(lines)
   for (var i = lines[0]; i < 8; i++) {
+    clear_thresholds[i] = 0
     for (var block_x = i; block_x < 19 - i; block_x++) {
       var moving_block = {x: block_x, y: i + lines.length}
       var new_value = 0
@@ -403,6 +396,17 @@ function init_board() {
 }
 
 function render_board() {
+  offscreenCtx.fillStyle = "midnightblue"
+  offscreenCtx.fillRect(0, 0, canvas.width, canvas.height)
+  offscreenCtx.fillStyle = "white"
+  offscreenCtx.fillRect(square_size_x * 8, square_size_y * 8, square_size_x * 4, square_size_y * 4)
+  if (active != null) {
+    offscreenCtx.fillStyle = get_color(active.color)
+    var drop_blocks = active.find_drop()
+    for (var i = 0; i < 4; i++) {
+      offscreenCtx.fillRect(square_size_x * drop_blocks[i].x, square_size_y * drop_blocks[i].y, square_size_x, square_size_y)
+    }
+  }
   for (var board_y = 0; board_y < 20; board_y++) {
     for (var board_x = 0; board_x < 20; board_x++) {
       switch (Math.abs(board[board_y][board_x])) {
@@ -437,7 +441,7 @@ function render_board() {
           break;
       }
 
-      offscreenCtx.fillRect(board_x * square_size_x, board_y * square_size_y, square_size_x, square_size_y)
+      offscreenCtx.fillRect(board_x * square_size_x + grid_line_size, board_y * square_size_y + grid_line_size, square_size_x - (2*grid_line_size), square_size_y - (2*grid_line_size))
     }
   }
   
@@ -498,6 +502,27 @@ switch (gravity_dir) {
 
 
   ctx.drawImage(offscreenCanvas, 0, 0)
+}
+
+function get_color(int) {
+  switch (int) {
+        case 1:
+          return "teal"
+        case 2:
+          return "blue"
+        case 3:
+          return "orange"
+        case 4:
+          return "yellow"
+        case 5:
+          return "green"
+        case 6:
+          return "purple"
+        case 7:
+          return "red"
+        default:
+          return "black"
+  }
 }
 
 
