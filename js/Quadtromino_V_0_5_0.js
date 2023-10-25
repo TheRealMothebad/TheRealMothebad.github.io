@@ -90,17 +90,17 @@ function onLoaded() {
 
   Button.start = new Button(canvas.width / 2 - 125, canvas.height / 2, 250, 80, "rgb(150, 150, 150)", "Start", 20, start_game)
   Button.rules = new Button(canvas.width / 2 - 125, canvas.height / 2 + 100, 250, 80, "rgb(150, 150, 150)", "Rules", 20, render_rules)
-  Button.back = new Button(20, 20, 50, 30, "rgb(150, 150, 150)", "Back", 20,
+  Button.back = new Button(20, 20, 120, 50, "rgb(150, 150, 150)", "<- Back", 20,
     () => {
       disable_all_buttons()
       Button.start.active = true
       Button.rules.active = true
-      render_menu})
+      render_main_menu()})
 
   Button.start.active = true
   Button.rules.active = true
 
-  render_menu()
+  render_main_menu()
 }
 
 function handle_mouse_down(event) {
@@ -109,7 +109,7 @@ function handle_mouse_down(event) {
   var y = (event.clientY - canvas_bounds.top) / canvas_bounds.height * canvas.height
   console.log("x: " + Math.floor(x) + " y: " + Math.floor(y) + " real: " + x)
   for (i = 0; i < Button.list.length; i++) {
-    console.log("invesigating x: " + Button.list[i].start_x + " y: " + Button.list[i].start_y)
+    console.log("invesigating " + Button.list[i].text + " x: " + Button.list[i].start_x + " y: " + Button.list[i].start_y)
     if (Button.list[i].active && Button.list[i].would_boop(x, y)) {
       Button.list[i].boop()
       console.log("would boop")
@@ -654,22 +654,69 @@ function init_board() {
 }
 
 function render_rules() {
+  buttonCtx.clearRect(0, 0, canvas.width, canvas.height)
+  Button.start.active = false;
+  Button.rules.active = false;
   Button.back.active = true
-  render_menu()
-  buttonCtx.fillStyle = "green"
+  render_buttons()
+
+  buttonCtx.fillStyle = "rgb(41, 209, 245)"
   buttonCtx.font = "40px sans serif"
-  buttonCtx.fillText("Test text\nnewline :)", canvas.width / 2, canvas.height / 2)
+  buttonCtx.fillText("Controls:", canvas.width / 2, 120)
+  buttonCtx.textAlign = "left"
+  buttonCtx.font = "30px sans serif"
+  buttonCtx.fillText("Move piece:   WASD or arrow keys", canvas.width / 10, 160)
+  buttonCtx.fillText("Rotate piece CW:   x", canvas.width / 10, 200)
+  buttonCtx.fillText("Rotate piece CCW:   z", canvas.width / 10, 240)
+  buttonCtx.fillText("Hard drop piece:   spacebar", canvas.width / 10, 280)
+  buttonCtx.font = "40px sans serif"
+  buttonCtx.textAlign = "center"
+  buttonCtx.fillText("How the Game Works:", canvas.width / 2, 350)
+  buttonCtx.textAlign = "left"
+  buttonCtx.font = "30px sans serif"
+  buttonCtx.fillText("When a piece is placed, gravity changes", canvas.width / 10, 400)
+  buttonCtx.fillText("to the direction the piece last moved!", canvas.width / 10, 440)
+  
+  buttonCtx.textAlign = "center"
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
+  ctx.drawImage(buttonCanvas, 0, 0)
 }
 
-function render_menu() {
+function render_main_menu() {
   buttonCtx.clearRect(0, 0, canvas.width, canvas.height)
   for (let button of Button.list) {
     if (button.active) {
       render_button(button)
     }
   }
+  buttonCtx.fillStyle = "yellow"
+  ///buttonCtx.fillStyle = "rgb(255, 87, 51)"
+  buttonCtx.font = "120px helvetica"
+  buttonCtx.fillText("Quadtromino", canvas.width / 2, canvas.height / 4)
+  buttonCtx.fillStyle = "rgb(51, 219, 255)"
+  buttonCtx.font = "30px sans serif"
+  buttonCtx.fillText("V0.5.0", canvas.width / 2, canvas.height / 3)
+  buttonCtx.font = "16px sans serif"
+  buttonCtx.fillText("It's not pretty, but it works!", canvas.width / 2, canvas.height / 3 + 24)
 
+  buttonCtx.font = "40px sans serif"
+  buttonCtx.fillText("<--", 560, 455)
+  buttonCtx.font = "18px sans serif"
+  buttonCtx.fillText("Reading the rules", 680, 430)
+  buttonCtx.fillText("before your first try", 690, 450)
+  buttonCtx.fillText("is HIGHLY RECOMMENDED", 680, 470)
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.drawImage(buttonCanvas, 0, 0)
+}
+
+function render_buttons() {
+  for (let button of Button.list) {
+    if (button.active) {
+      render_button(button)
+    }
+  }
 }
 
 function render_button(button) {
