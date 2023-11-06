@@ -74,6 +74,11 @@ div.navbutton {
 	padding-right: 5px;
 }
 
+hr.top_line {
+  border-top: 2px dashed #d3d3d3;
+  color: #1c1c1c;
+}
+
 div.line {
     text-overflow: "";
     overflow: clip;
