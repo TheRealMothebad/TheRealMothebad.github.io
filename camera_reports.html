@@ -8,45 +8,106 @@
       <link rel="stylesheet" type="text/css" href="style.css" />
     </head>
 
-    <body>
+<style>
+  html {
+    overflow-y: scroll;
+  }
 
-        <div id="title">
-            <pre class="banner">John
+  body {
+    margin: 0px;
+  }
+
+  div.photos_sidebar {
+    text-align: right;
+    width: 120px;
+    margin: auto;
+    padding: 0px 5px;
+    position: fixed;
+    left: 0;
+	  display: inline-block;
+    border-right: #d3d3d3 solid 2px;
+  }
+
+  .photos_sidebar > a {
+    display: block;
+    padding: 10px 5px;
+    margin: 0px;
+  }
+
+  div.photos_panel {
+    margin-left: 150px;
+    padding-right: 3%;
+    width: auto;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+  }
+
+  .photos_panel > p {
+    scroll-snap-align: start;
+    scroll-margin-top: 10px;
+  }
+
+  @media only screen and (max-device-width: 500px) {
+    div.photos_sidebar {
+      position: sticky;
+      top: 0;
+      width: auto;
+      margin: 0px;
+      padding: 10px 0px;
+      border-right: 0px;
+      border-bottom: #d3d3d3 solid 2px;
+      text-align: center;
+      background-color: #1c1c1c;
+    }
+
+    .photos_sidebar > a {
+      display: inline-block;
+      vertical-align: baseline;
+      padding: 5px;
+      margin: auto;
+    }
+
+    div.photos_panel {
+      margin-left: auto;
+    }
+
+    h1 {
+      padding-top: 140px;
+      margin-top: -140px;
+    }
+  }
+
+</style>
+
+<body>
+   <div id="title">
+     <pre class="banner">John
     Umbriac's
           Photos</pre>
-      </div>
+   </div>
       
-      <div class="line">
-        <pre>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
-      </div>
+  <hr class="title_line">
 
 
-      <div id="side-nav">
-        <div class="nav">
-        <a href="#title">Top</a><br><br>
+<div class="photos_sidebar">
+  <a href="#title">Top</a>
+    <a href="#report_11">Report 11</a>
+    <a href="#report_10">Report 10</a>
+    <a href="#report_9">Report 9</a>
+    <a href="#report_8">Report 8</a>
+    <a href="#report_7">Report 7</a>
+    <a href="#report_6">Report 6</a>
+    <a href="#report_5">Report 5</a>
+    <a href="#report_4">Report 4</a>
+    <a href="#report_3">Report 3</a>
+    <a href="#report_2">Report 2</a>
+    <a href="#report_1">Report 1</a>
+</div>
 
-        <a href="#report_7">Report 7</a><br><br>
-        <a href="#report_6">Report 6</a><br><br>
-        <a href="#report_5">Report 5</a><br><br>
-        <a href="#report_4">Report 4</a><br><br>
-        <a href="#report_3">Report 3</a><br><br>
-        <a href="#report_2">Report 2</a><br><br>
-        <a href="#report_1">Report 1</a><br><br>
-        </div>
-        <div class="nav-line">
-            <p class="nav-line">|<br>|<br>|<br>|<br>|<br>|<br>|<br>|<br>|<br><div class="s-hide">|<br>|<br>|<br></div><div class="b-hide">|<br></div><div class="xs-hide">|<br></div></p>
-        </div>
-      </div>
-
-
-    <div class="pad-l"> 
-    <p class="smol">(Hint:hover your cursor over an image to see my notes on it)</p>
-  
+<div class="photos_panel"> 
+  <p class="smol">(Hint:hover your cursor over an image to see my notes on it)</p>
+    
     <h1 id="report_11">Camera Report 11</h1>
-    <p>"Wads Food" | 1/80 f/4.5 35.0mm 1600 ISO | Wadsworth Dining Hall</p>
-    <img src="photos/camera_report11/wads_food.jpg" alt="pending alt text"
-    title="So appealing!">
-    <hr>
     <p>"Donked Up Sign" | 1/80 f/4.5 29.0mm 200 ISO | Student Development Complex</p>
     <img src="photos/camera_report11/donked_up_sign.jpg" alt="pending alt text"
     title="These photos should hopefully show my progression as a photographer over this semester">
@@ -160,7 +221,7 @@
     <img src="photos/camera_report9/splash.jpg" alt="pending alt text"
     title="The colors on this one seem a bit off no matter what I do, but I really like the subject!">
     <hr>
-    
+
     <h1 id="report_8">Camera Report 8</h1>
     <p>"Supermileage" | 1/80 f/4.5 34.0mm 800 ISO | M&M Machine Shop</p>
     <img src="photos/camera_report8/supermileage.jpg" alt="pending alt text"
@@ -317,7 +378,7 @@
     <img src="photos/camera_report3/greed.jpg" alt="pending alt text"
     title="Maybe it's the nature of nature photography to be inconsistent because I have so many blurry photos, and this is not one of them...">
     <hr>
-    
+
     <h1 id="report_2">Camera Report 2</h1>
     <p>"Very Good Dog!" | 1/640 f/5.6 55.0mm 100 ISO | Breakers Beach</p>
     <img src="photos/camera_report2/good_boy.jpg" alt="pending alt text"
@@ -386,8 +447,8 @@
     <img src="photos/camera_report/IMG_3298.jpg" alt="pending alt text"
     title="I attempted to capture the lights, still need some practice though. I think my aperture was too high, and my exposure was too short.">
     <hr>
-
-    </div>
+    
+  </div>
     
 </body>
 

@@ -1,172 +1,51 @@
-html { overflow-y: scroll;}
+
 body {
 	font-family: "Consolas", monospace;
 	font-size: 15pt;
-	padding-left: 6%;
-	padding-right: 6%;
-    color: #d3d3d3;
-    background-color: #1c1c1c;
-	margin:0
+  color: #d3d3d3;
+  background-color: #1c1c1c;
 }
-h1 {
-	font-size: 40pt;
+
+a {
+  color: #00c0da
 }
-div.pad-s {
-	padding-left: 6%;
-	padding-right: 6%;
-}
-div.pad-l {
-	padding-left: 25%;
-	padding-right: 6%;
-}
-div.center {
-    margin: 0 auto;
-    width: 50%;
-}
-.banner {
-    font-size: 26pt;
-    margin: auto;
-	max-width: -moz-fit-content;
+
+pre.banner {
+  font-size: 26pt;
+  margin: 5px auto;
 	max-width: fit-content;
 }
-table {
-	border-collapse: collapse;
-	width: auto;
-}
-table.board_square {
-	border:1px solid black;	
-}
-input {
-	width: 10px;
-}
-td, th {
-	border: 1px solid #e6e6e6;
-	text-align: left;
-	padding: 8px;
-}
-ul.nav {
-	border: 1px solid #ffffff00;
-	text-align: right;
-	list-style: none;
-	font-size: larger;
-	margin-right: 18%;
-	text-overflow: "|";
-    white-space: nowrap;
+
+hr.title_line {
+  color: transparent;
+  height: 2px;
+  border-top: #d3d3d3 dashed 2px;
+  margin: 10px 1%;
 }
 
-p.smol {
-	font-size: 70%;
-	margin-bottom: 5px;
-	margin-left: 5%;
-	margin-top: 5%;
-}
-h1.no-top {margin-top: 0%;}
-/*
-Nav Buttons
-*/
-div.navs {
-    margin:auto;
-}
-div.navbutton { 
-    display: inline-block;
-    margin: 0 auto;
-	padding-left: 5px;
-	padding-right: 5px;
+div.navbar {
+  width: 100%;
 }
 
-hr.top_line {
-  border-top: 2px dashed #d3d3d3;
-  color: #1c1c1c;
+div.navbutton {
+  display: inline-block;
+  margin: 5px;
 }
 
-div.line {
-    text-overflow: "";
-    overflow: clip;
-    white-space: nowrap;
-    margin: auto;
+div.content {
+  width: 90%;
+  margin: auto;
 }
 
-a { color: #00c0da }
-ul { margin: 5px; }
-
-.half-child {
-	float: left;
-	width: 45%;
-}
-
-
-/*
-top golf
-*/
-hr {
-	color:#2c2c2c;
-}
 img {
-	width: 100%;
-}
-#side-nav{
-	width: 25%;
-	background:#ffffff00;
-	position: fixed;/* for good browsers */
-	left :0;
-	display: inline-block;
-}
-div.nav {
-	display: inline-block;
-	text-align: end;
-	margin-left: 25%;
-}
-p.nav-line {
-	margin: 0%;
-	width: 8px;
-}
-div.nav-line {display: inline-block;}
-
-div.b-hide {display: none;}
-div.s-hide {display: none;}
-div.xs-hide {display: none;}
-
-@media only screen and (max-device-width: 1050px) {
-	#side-nav { font-size: medium;}
-	div.b-hide {display: block;}
+  max-width: 100%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
 }
 
-@media only screen and (max-device-width: 700px) {
-	body { font-size: 12pt; }
-	div#title { font-size: 50%; }
-	table { width: 100% }
-	ol { margin-left: 20px; }
-	div.navbutton { font-size: 120%; }
-	div.float {
-		float: none;
-		margin-right: 0px;
-	}
-	table.stats {
-		width: 100%;
-		margin-left: 0px;
-	}
-	#side-nav { 
-		font-size: 10pt;
-	}
-	div.s-hide {display: block;}
-}
-
-
-iframe.desktop {
-	display: block;
-}
-iframe.mobile {
-	display: none;
-}
-@media only screen and (max-device-width: 500px) {
-	iframe.desktop {
-		display: none;
-	}
-	iframe.mobile {
-		display: block;
-	}
-}
-
-@media only screen and (max-device-width: 475px) {
-	div.xs-hide {display: block;}
+@media (max-width: 400px) {
+  pre.banner {
+    font-size: 20pt;
+  }
 }

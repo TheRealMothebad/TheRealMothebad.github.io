@@ -1,5 +1,3 @@
-<!-- [[Nerdle]] -->
-<!-- ||3|| -->
 <!DOCTYPE html>
     <html lang="en">
 <head>
@@ -8,32 +6,44 @@
 <title>John Umbriac</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
+
+<style>
+  a {
+    text-decoration-line: none;
+  }
+  pre.banner {
+    font-size: 16pt;
+  }
+  iframe {
+    height: 80vh;
+  }
+  iframe.desktop {
+	  display: block;
+  }
+  iframe.mobile {
+	  display: none;
+  }
+  @media (max-width: 500px) {
+	  iframe.desktop {
+		  display: none;
+	  }
+	  iframe.mobile {
+		  display: block;
+	  }
+  }
+</style>
+
 <body>
 <div id="title">
-      <pre class="banner">John
+      <pre class="banner"><a href="index.html">John
     Umbriac's
-           Website</pre>
+           Website</a></pre>
 </div>
 
-<div class="line">
-  <pre>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------</pre>
-</div>
+<hr class="title_line">
 
-
-<div style="text-align: center;">
-  <div class="navs">
-    <div class="navbutton">+------+<br>| <a href="index.html">Home</a> |<br>+------+</div>
-    <div class="navbutton">+-------+<br>| <a href="links.html">Links</a> |<br>+-------+</div>
-    <div class="navbutton">+-----------+<br>| <a href="portfolio.html">Portfolio</a> |<br>+-----------+</div>
-    <div class="navbutton">+--------+<br>| <strong>Nerdle</strong> |<br>+--------+</div>
-    <div class="navbutton">+----------------+<br>| <a href="boggle_scaper.html">Boggle Scraper</a> |<br>+----------------+</div>
-    <div class="navbutton">+-------------+<br>| <a href="photos.html">Photography</a> |<br>+-------------+</div>
-    
-  </div>
-</div>
-
-<p>All you have to do is wait for it to load, and then click the green play button in the bottom right corner.</p>
-<iframe class="desktop" title="Nerdle" width="100%" height="650px" src="https://replit.com/@TheRealMothebad/Nerdle?embed=true"></iframe>
-<iframe class="mobile" title="Nerdle" width="100%" height="650px" src="https://replit.com/@TheRealMothebad/Mobile-Nerdle?embed=true"></iframe>
+<p>All you have to do is wait for it to load, and then click the green play button in the top right corner.</p>
+<iframe class="desktop" title="Nerdle" width="100%" src="https://replit.com/@TheRealMothebad/Nerdle?embed=true"></iframe>
+<iframe class="mobile" title="Nerdle" width="100%" src="https://replit.com/@TheRealMothebad/Mobile-Nerdle?embed=true"></iframe>
 </body>
 </html>

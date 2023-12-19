@@ -1,0 +1,111 @@
+<!-- [[Projects|2]] -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>My Personal Projects</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+</head>
+
+<style>
+  a {
+    color: #d3d3d3;
+  }
+  div.tile {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  div.halfwidth {
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
+  }
+
+  @media (max-width: 850px) {
+    div.halfwidth {
+      width: 100%;
+    }
+  }
+</style>
+
+<body>
+<pre class="banner">John
+    Umbriac's
+           Website</pre>
+
+<hr class="title_line">
+
+
+<div style="text-align: center;">
+  <div class="navbar">
+    <div class="navbutton">+------+<br>
+| <a href="index.html">Home</a> |<br>
++------+</div>
+<div class="navbutton">+-------+<br>
+| <a href="about.html">About</a> |<br>
++-------+</div>
+<div class="navbutton">+----------+<br>
+| <strong>Projects</strong> |<br>
++----------+</div>
+<div class="navbutton">+-----------+<br>
+| <a href="portfolio.html">Portfolio</a> |<br>
++-----------+</div>
+<div class="navbutton">+-------------+<br>
+| <a href="photos.html">Photography</a> |<br>
++-------------+</div>
+
+  </div>
+</div>
+
+
+  <div class="content">
+    <div class="tile">
+      <div class="halfwidth">
+        <h2><a href="quadtromino.html">Quadtromino</a></h2>
+        <h3>More different from tetris than it seems!</h3>
+        <p>If you think Tetris is too easy, you should try Quadtromino.
+It's Tetris but the gravity changes depeneding on how you move the piece.
+My personal best is 5 lines cleared, can you do better?
+<br><br>
+I started this project in Sophmore year of college as a ploy to finally learn Javascript.
+It's by far the most fun game I have made (as well as the most difficult!)</p>
+      </div>
+      <div class="halfwidth">
+        <a href="quadtromino.html"><img src="photos/projects/quadtromino.png"></a>
+      </div>
+    </div>
+    <hr>
+
+    <div class="tile">
+      <div class="halfwidth">
+        <h2><a href="nerdle.html">Nerdle</a></h2>
+        <h3>My obligatory Wordle clone</h3>
+        <p>Nerdle puts your math skills to the test!<br>
+Use your knowledge of PEMDAS to reverse engineer the equation, and find the secret equation...<br><br>
+I made this project for my math teacher in my senior year of Highschool as a fun activity for people to do on Pi day.</p>
+      </div>
+      <div class="halfwidth">
+        <a href="nerdle.html"><img src="photos/projects/nerdle.png" style="border: 1px solid #d3d3d3;"></a>
+      </div>
+    </div>
+    <hr>
+
+    <h2>Website Builder Script (source code coming soon)</h2>
+    <h3>Used to make this site!</h3>
+    <p>This script allows you to easily template any HTML block into a stub,
+guarenteeing consistency of sections that are duplicated across multiuple webpages as your design vision changes.
+The syntax supports passing parameters to each stub to maximise customization, along with many other features!</p>
+    <hr>
+
+
+    <h2>Boggle Scraper (source code coming soon)</h2>
+    <h3>It's super fast!</h3>
+    <p>For some reason, the one constant of my programming career is Boggle.<br>
+When I decided to learn Rust it was my first project, and I have been iterating on it ever since. </p>
+    <hr>
+  </div>
+</body>
+
+</html>
