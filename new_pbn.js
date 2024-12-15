@@ -7,6 +7,13 @@ let MAX_ZOOM = 5
 let MIN_ZOOM = 0.1
 let SCROLL_SENSITIVITY = 0.0005
 
+let drobjects = []
+
+function create_persistant_text(text, x, y, size, font) {
+  drobjects.push({text: text, x: x, y: y, size: size, font: font})
+  console.log(drobjects)
+}
+
 function draw()
 {
     canvas.width = window.innerWidth
@@ -36,6 +43,11 @@ function draw()
     ctx.rotate(31*Math.PI / 180)
     
     drawText("Wow, you found me!", -260, -2000, 48, "courier")
+
+  for (o of drobjects) {
+    console.log("printing: ", o)
+    drawText(o.text, o.x, o.y, o.size, o.font)
+  }
     
     requestAnimationFrame( draw )
 }
@@ -62,6 +74,7 @@ function drawText(text, x, y, size, font)
 {
     ctx.font = `${size}px ${font}`
     ctx.fillText(text, x, y)
+  //console.log("draw at ", x, " ", y)
 }
 
 let isDragging = false
@@ -70,7 +83,7 @@ let realSpace = { x: 0, y: 0 }
 
 function onPointerDown(e)
 {
-    isDragging = true
+   // isDragging = true
     dragStart.x = getEventLocation(e).x/cameraZoom - cameraOffset.x
     dragStart.y = getEventLocation(e).y/cameraZoom - cameraOffset.y
 
@@ -91,8 +104,15 @@ function onPointerUp(e)
 
 
     if ( Math.abs((getEventLocation(e).x) - realSpace.x) < 10 &&
-         Math.abs((getEventLocation(e).y) - realSpace.y) < 10) {
-        console.log("small")
+      Math.abs((getEventLocation(e).y) - realSpace.y) < 10) {
+      console.log("small")
+      //drawText("Wow", getEventLocation(e).x/cameraZoom - cameraOffset.x,
+      //getEventLocation(e).y/cameraZoom - cameraOffset.y, 32, "courier")
+
+      ctx.fillStyle = "#fff"
+
+    create_persistant_text("Wow", getEventLocation(e).x/cameraZoom - cameraOffset.x,
+      getEventLocation(e).y/cameraZoom - cameraOffset.y, 32, "courier")
   }
 }
 
