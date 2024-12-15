@@ -83,7 +83,7 @@ let realSpace = { x: 0, y: 0 }
 
 function onPointerDown(e)
 {
-   // isDragging = true
+    isDragging = true
     dragStart.x = getEventLocation(e).x/cameraZoom - cameraOffset.x
     dragStart.y = getEventLocation(e).y/cameraZoom - cameraOffset.y
 
