@@ -1,37 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Quadtromino V0.5.0</title>
+  <title>Quadtromino V0.6.0</title>
   <link rel="stylesheet" type="text/css" href="style.css" />
   <style>
     html, body {
       height: 100%;
       margin: 0;
-      overflow: hidden; /* Hide scroll bars */
+      overflow: hidden;
+    }
+
+    @font-face {
+      font-family: "spaceFont";
+      src: url(CasanovaScotia-Xm0K.ttf) format("truetype");
+    }
+
+    div.menus {
+      text-align: center;
+    }
+
+    div.rules {
+      margin: 0;
+      position: absolute;
+      width: 80%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    div.main_menu {
+      margin: 0;
+      position: absolute;
+      width: 80%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%); 
+    }
+
+    div.submit_score {
+      animation: fadeInFromNone 0.5s ease-out;
+    }
+
+    h1.title {
+      margin: 0.5em auto 0 auto;
+      max-width: fit-content;
+      font-family: "spaceFont";
+      color: yellow;
+      font-size: 9vw;
+    }
+
+    p.subtitle {
+      color: aqua;
+      margin: 0;
+      font-size: min(15pt, 3vw);
     }
 
     .page_filler {
       height: 100%;
-      display: flex;
       flex-direction: column;
-    }
-
-    p {
-      justify-content: center;
-      align-items: center;
-    }
-    .page_header {
-      padding-left: 10%;
+      display: none;
+      animation: fadeInFromNone 0.5s ease-out;
     }
 
     .canvas-container {
-      flex-grow: 1 1 auto; /* Fill remaining vertical space */
+      flex-grow: 1 1 auto;
       display: flex;
       max-width: 100%;
       max-height: 100%;
       justify-content: center;
       align-items: center;
-      overflow: auto; /* Enable scrolling if canvas doesn't fit */
+      overflow: auto;    
     }
 
     canvas {
@@ -43,21 +81,207 @@
     }
 
     button {
-      max-width: 30%;
+      background-color: darkslategray;
+      color: aqua;
+      border: 2px solid aqua;
+      border-radius: 2px;
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 20px;
+      margin: 1em;
+      padding: 20px 26px;
+      transition: transform 0.2s ease;
 
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .initials {
+        width: 40px;
+        height: 60px;
+        margin: 0 10px;
+        font-size: min(30pt, 4vw);
+        text-align: center;
+        background: none;
+        border: none;
+        border-bottom: 4px solid aqua; 
+        color: aqua;
+        outline: none;
+        text-transform: uppercase;
+    }
+
+    @keyframes fadeInFromNone {
+      0% {
+        display: none;
+        opacity: 0;
+      }
+
+      1% {
+        display: block;
+        opacity: 0;
+      }
+
+      100% {
+        display: block;
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOutToNone {
+      0% {
+        display: block;
+        opacity: 1;
+      }
+
+      99% {
+        display: block;
+        opacity: 0;
+      }
+
+      100% {
+        display: none;
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page_filler">
-    <div class="page_header">
+  <div class="menus">
+    <div id="menu_div", class="main_menu">
+      <h1 class="title">Quadtromino</h1>
+      <p class="subtitle">Version 0.6.0<br>"Beat your friends! (on the leaderboard)"</p>
+      <button onclick="start_game()" autofocus>Start Game</button><br>
+      <button onclick="rules()">Rules</button><br>
+      <button onclick="leaderboard()">Leaderboard</button>
     </div>
+    <div id="rules_div" class="rules" style="display: none">
+      <button onclick="back()" style="position: absolute; left: 0">Back</button>
+      <h1>Rules</h1>
+      <h3>Controls:</h3>
+      <p>Move piece: WASD or arrow keys</p>
+      <p>Rotate Piece clockwise: x or ,</p>
+      <p>Rotate piece counterclockwise: z or .</p>
+      <p>Hard drop piece: spacebar</p>
+      <h1>How the game works:</h1>
+      <p>When a piece is placed, gravity changes<br>to the direction the piece last moved!</p>
+    </div>
+    <div id="send_score" class="submit_score" style="display: none; width: 100%; position: absolute; top: 10%; justify-content: center; align-items: center;">
+      <div>
+        <h2>Game over</h2>
+        <p id="score_line"></p>
+        <div id="submit_fields">
+          <p>Enter your initials to submit your score</p>
+          <div>
+            <input type="text" maxlength="1" class="initials" id="initial1">
+            <input type="text" maxlength="1" class="initials" id="initial2">
+            <input type="text" maxlength="1" class="initials" id="initial3">
+          </div>
+          <button onclick="parse_name()">Submit Score</button>
+        </div>
+        <div id="submit_success" style="display: none;">
+          <p>Record sucessfully submitted!</p>
+          <p>You placed <strong id="placement"></strong> on the <a href="leaderboard.html">global leaderboard</a>.</p>
+        </div>
+        <div id="submit_failed" style="display: none;">
+          <p style="color: red;"><strong>Submission failed!</strong></p>
+          <p>If this issue persists, please use the button provided to send John an email.</p>
+          <div style="display: inline-block;">
+            <button onclick="parse_name()">Retry Submission</button>
+            <button onclick="send_email()">Send Email</button>
+          </div>
+          <p id="all_hope_is_lost" style="display: none;">Something has gone horribly wrong. You are beyond saving now. Sorry :,(</p>
+        </div>
+      <button onclick="window.location.reload()">Play Again</button>
+      </div>
+    </div>
+  </div>
+  <div class="page_filler" id="game_div">
     <div class="canvas-container">
       <canvas id="myCanvas" width="800" height="608"></canvas>
     </div>
-    <button style="width: 300px; margin: 0 auto;" onClick="window.location.reload();">Restart Game</button>
   </div>
+  <script src="js/jsrand.min.js"></script>
+  <script src="js/quadtromino_versions/Quadtromino_V_0_6_0.js"></script>
+  <script>
 
-  <script src="js/Quadtromino_V_0_5_0.js"></script>
+    game_started = false
+
+    function start_game() {
+      if (game_started == true) {
+        return
+      }
+      game_started = true
+      document.getElementById("menu_div").style.animation = "fadeOutToNone 0.2s ease-out forwards"
+      setTimeout(() => {
+        document.getElementById("game_div").style.display = "block"
+        initialize_stuff()
+      }, 200)
+    }
+
+    function rules() {
+      document.getElementById("menu_div").style.display = "none"
+      document.getElementById("rules_div").style.display = "block"
+    }
+
+    function back() {
+      document.getElementById("rules_div").style.display = "none"
+      document.getElementById("menu_div").style.display = "block"
+    }
+
+    function leaderboard() {
+      window.location.href = "leaderboard.html"
+    }
+
+    function show_score() {
+      document.querySelectorAll('.initials').forEach(input => {
+        input.value = '';
+      })
+      document.getElementById("send_score").style.display = "flex"
+      document.getElementById("initial1").focus()
+    }
+
+    function parse_name() {
+      var name = ""
+      document.querySelectorAll('.initials').forEach((input) => {
+        if (/^[a-zA-Z]/.test(input.value)) {
+          console.log("bad name box");
+        }
+        name = name + input.value
+      })
+
+      send_score(name)
+    }
+
+    var message_body;
+    function send_email() {
+      if (message_body == null) {
+        console.log("VERY BAD!!! MESSAGE BODY NOT POPULATED");
+        document.getElementById("all_hope_is_lost").style.display = "block";
+        return;
+      }
+      navigator.clipboard.writeText(message_body);
+      window.open("mailto:mothebad@gmail.com?subject=FIX UR GAME IT BROKE&body=Paste your game data here with ctrl\+v please: ");
+    }
+
+    document.querySelectorAll('.initials').forEach((input, index, inputs) => {
+        input.addEventListener('input', () => {
+        if (!(/^[a-zA-Z]/.test(input.value))) {
+          input.value = ""
+        }
+        if (input.value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Backspace' && !input.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+    });
+
+  </script>
 </body>
 </html>
