@@ -61,7 +61,7 @@ let game_is_over = true
 
 let background = null
 
-let server_url = "https://quadtromino-server-593802003080.us-east1.run.app/"
+let server_url = "https://api.umbriac.com/"
 
 function initialize_stuff() {
 
