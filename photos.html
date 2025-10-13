@@ -19,27 +19,25 @@
 
 
 <div style="text-align: center;">
-  <div class="navbar">
-    <div class="navbutton">+------+<br>
-| <a href="index.html">Home</a> |<br>
-+------+</div>
-<div class="navbutton">+-------+<br>
-| <a href="about.html">About</a> |<br>
-+-------+</div>
-<div class="navbutton">+----------+<br>
-| <a href="projects.html">Projects</a> |<br>
-+----------+</div>
-<div class="navbutton">+-----------+<br>
-| <a href="portfolio.html">Portfolio</a> |<br>
-+-----------+</div>
-<div class="navbutton">+-------------+<br>
-| <strong>Photography</strong> |<br>
-+-------------+</div>
+  <p class="navbar">
+    <a href="index.html" class="navbutton">Home</a>
+| <a href="about.html" class="navbutton">About</a>
+| <a href="projects.html" class="navbutton">Projects</a>
+| <a href="portfolio.html" class="navbutton">Portfolio</a>
+| <strong class="navbutton"><u>Photography</u></strong>
 
-  </div>
+  </p>
 </div>
 
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
 
+    const elements = Array.from(document.body.querySelectorAll("p, a, u, h2, h3, code, span, pre"))
+      .filter(el => el.textContent.trim().length > 0);
+
+    elements.forEach(el => el.style.visibility = "visible");
+  })
+</script>
 <style>
   html {
     overflow-y: scroll;

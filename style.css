@@ -6,31 +6,40 @@ body {
   background-color: #1c1c1c;
 }
 
+p {
+  visibility: hidden;
+}
+
+h2 {
+  visibility: hidden;
+}
+
+h3 {
+  visibility: hidden;
+}
+
 a {
-  color: #00c0da
+  color: #00c0da;
 }
 
 pre.banner {
   font-size: 26pt;
   margin: 5px auto;
 	max-width: fit-content;
+  visibility: hidden;
 }
 
 hr.title_line {
   color: transparent;
   height: 2px;
-  border-top: #d3d3d3 dashed 2px;
+  border-top: #d3d3d3 solid 2px;
   margin: 10px 1%;
 }
 
-div.navbar {
+navbar {
   width: 100%;
 }
 
-div.navbutton {
-  display: inline-block;
-  margin: 5px;
-}
 
 div.content {
   width: 90%;

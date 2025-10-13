@@ -7,10 +7,12 @@
 <meta name="viewport" content="width=device-width">
 <title>My Personal Projects</title>
 <link rel="stylesheet" type="text/css" href="style.css" />
+<script src="typing_effect.js"></script>
 </head>
 
+
 <style>
-  a {
+  a.project {
     color: #d3d3d3;
   }
   div.tile {
@@ -39,31 +41,21 @@
 
 
 <div style="text-align: center;">
-  <div class="navbar">
-    <div class="navbutton">+------+<br>
-| <a href="index.html">Home</a> |<br>
-+------+</div>
-<div class="navbutton">+-------+<br>
-| <a href="about.html">About</a> |<br>
-+-------+</div>
-<div class="navbutton">+----------+<br>
-| <strong>Projects</strong> |<br>
-+----------+</div>
-<div class="navbutton">+-----------+<br>
-| <a href="portfolio.html">Portfolio</a> |<br>
-+-----------+</div>
-<div class="navbutton">+-------------+<br>
-| <a href="photos.html">Photography</a> |<br>
-+-------------+</div>
+  <p class="navbar">
+    <a href="index.html" class="navbutton">Home</a>
+| <a href="about.html" class="navbutton">About</a>
+| <strong class="navbutton"><u>Projects</u></strong>
+| <a href="portfolio.html" class="navbutton">Portfolio</a>
+| <a href="photos.html" class="navbutton">Photography</a>
 
-  </div>
+  </p>
 </div>
 
 
   <div class="content">
     <div class="tile">
       <div class="halfwidth">
-        <h2><a href="quadtromino.html">Quadtromino</a></h2>
+        <h2><a href="quadtromino.html" class="project">Quadtromino</a></h2>
         <h3>More different from tetris than it seems!</h3>
         <p>If you think Tetris is too easy, you should try Quadtromino.
 It's Tetris but the gravity changes depeneding on how you move the piece.
@@ -80,7 +72,7 @@ It's by far the most fun game I have made (as well as the most difficult!)</p>
 
     <div class="tile">
       <div class="halfwidth">
-        <h2><a href="nerdle.html">Nerdle</a></h2>
+        <h2><a href="nerdle.html" class="project">Nerdle</a></h2>
         <h3>My obligatory Wordle clone</h3>
         <p>Nerdle puts your math skills to the test!<br>
 Use your knowledge of PEMDAS to reverse engineer the equation, and find the secret equation...<br><br>
