@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Opacity Changer</title>
+</head>
+<body>
+
+  <input type="file" id="fileInput" accept=".svg" />
+  <div id="svgContainer"></div>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+
+    function handleFileSelect(event) {
+      const fileInput = event.target;
+      const file = fileInput.files[0];
+
+      if (file && file.type === 'image/svg+xml') {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const svgContent = e.target.result;
+
+          // Render SVG at half opacity
+          document.getElementById('svgContainer').innerHTML = svgContent;
+
+          // Add click event to each individual SVG element
+          const svgElements = document.getElementById('svgContainer').querySelectorAll('svg path, svg circle, svg rect');
+          svgElements.forEach(function (element) {
+            element.style.opacity = 0.5;
+            element.addEventListener('click', function () {
+              this.style.opacity = 1.0;
+            });
+          });
+        };
+
+        reader.readAsText(file);
+      } else {
+        alert('Please upload a valid SVG file.');
+      }
+    }
+  </script>
+
+</body>
+</html>

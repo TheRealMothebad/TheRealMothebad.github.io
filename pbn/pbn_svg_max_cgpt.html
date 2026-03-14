@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Posterization &amp; Blob-to-SVG with Max Blob Size Demo</title>
+  <style>
+    body { font-family: sans-serif; }
+    canvas { border: 1px solid #333; margin: 10px 0; display: none; }
+    svg { border: 1px solid #333; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Posterization &amp; Blob-to-SVG with Max Blob Size Demo</h1>
+  <p>
+    Load an image and click "Process Image" to produce an SVG result.  
+    Blobs smaller than the minimum or larger than the maximum size are merged or split.
+  </p>
+  <input type="file" id="upload" accept="image/*">
+  <button id="processBtn">Process Image</button>
+  <br>
+  <!-- A hidden canvas is used for image processing -->
+  <canvas id="canvas"></canvas>
+  <!-- The resulting SVG will be placed here -->
+  <div id="svgContainer"></div>
+
+  <script>
+    // ===== Helper Functions =====
+
+    // Get the [r,g,b,a] color at (x,y) from imageData.
+    function getColorAt(data, x, y, width) {
+      const index = (y * width + x) * 4;
+      return [data[index], data[index+1], data[index+2], data[index+3]];
+    }
+
+    // Compare two colors (arrays of 4 numbers).
+    function colorsEqual(c1, c2) {
+      return c1[0] === c2[0] &&
+             c1[1] === c2[1] &&
+             c1[2] === c2[2] &&
+             c1[3] === c2[3];
+    }
+
+    // Convert an [r,g,b,a] color to an "rgba(...)" string.
+    function colorToRGBA(color) {
+      return `rgba(${color[0]},${color[1]},${color[2]},${color[3]/255})`;
+    }
+
+    // ===== Step 1: Posterization =====
+    // Reduce the number of colors by bucketing each channel.
+    function posterizeImage(imageData, levels) {
+      const data = imageData.data;
+      const factor = 256 / levels; // e.g. levels = 4 => factor = 64
+      for (let i = 0; i < data.length; i += 4) {
+        data[i]   = Math.floor(data[i]   / factor) * factor;
+        data[i+1] = Math.floor(data[i+1] / factor) * factor;
+        data[i+2] = Math.floor(data[i+2] / factor) * factor;
+        // Alpha (data[i+3]) remains unchanged.
+      }
+    }
+
+    // ===== Step 2: Connected Components Analysis =====
+    // Label each contiguous blob (using 4-connected neighbors).
+    function labelComponents(imageData, width, height) {
+      const data = imageData.data;
+      const labels = new Array(width * height).fill(-1);
+      let currentLabel = 0;
+      const blobSizes = {}; // label -> pixel count
+
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const idx = y * width + x;
+          if (labels[idx] === -1) { // Unlabeled: start a new blob.
+            const baseColor = getColorAt(data, x, y, width);
+            const stack = [{ x, y }];
+            labels[idx] = currentLabel;
+            let size = 0;
+
+            while (stack.length > 0) {
+              const { x: cx, y: cy } = stack.pop();
+              size++;
+              const neighbors = [
+                { x: cx + 1, y: cy },
+                { x: cx - 1, y: cy },
+                { x: cx,     y: cy + 1 },
+                { x: cx,     y: cy - 1 }
+              ];
+              for (const n of neighbors) {
+                if (n.x >= 0 && n.x < width && n.y >= 0 && n.y < height) {
+                  const nIdx = n.y * width + n.x;
+                  if (labels[nIdx] === -1) {
+                    const nColor = getColorAt(data, n.x, n.y, width);
+                    if (colorsEqual(baseColor, nColor)) {
+                      labels[nIdx] = currentLabel;
+                      stack.push({ x: n.x, y: n.y });
+                    }
+                  }
+                }
+              }
+            }
+            blobSizes[currentLabel] = size;
+            currentLabel++;
+          }
+        }
+      }
+      return { labels, blobSizes };
+    }
+
+    // ===== Step 3: Merge Small Blobs =====
+    // For each pixel in a blob smaller than minSize, check its 4-connected neighbors.
+    function mergeSmallBlobs(imageData, labels, blobSizes, width, height, minSize) {
+      const data = imageData.data;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const idx = y * width + x;
+          const label = labels[idx];
+          if (blobSizes[label] < minSize) {
+            // Look at the 4-connected neighbors.
+            const neighbors = [
+              { x: x + 1, y },
+              { x: x - 1, y },
+              { x,     y: y + 1 },
+              { x,     y: y - 1 }
+            ];
+            for (const n of neighbors) {
+              if (n.x >= 0 && n.x < width && n.y >= 0 && n.y < height) {
+                const nIdx = n.y * width + n.x;
+                const nLabel = labels[nIdx];
+                if (nLabel !== label && blobSizes[nLabel] >= minSize) {
+                  const newColor = getColorAt(data, n.x, n.y, width);
+                  const index = idx * 4;
+                  data[index]   = newColor[0];
+                  data[index+1] = newColor[1];
+                  data[index+2] = newColor[2];
+                  data[index+3] = newColor[3];
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // ===== Step 4: Morphological Smoothing =====
+    // A simple mode filter over a 3x3 neighborhood.
+    function smoothImage(imageData, width, height) {
+      const data = imageData.data;
+      const copy = new Uint8ClampedArray(data);
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const colorCounts = {};
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const nx = x + dx, ny = y + dy;
+              if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                const nIdx = (ny * width + nx) * 4;
+                const r = copy[nIdx],
+                      g = copy[nIdx+1],
+                      b = copy[nIdx+2],
+                      a = copy[nIdx+3];
+                const key = r + ',' + g + ',' + b + ',' + a;
+                colorCounts[key] = (colorCounts[key] || 0) + 1;
+              }
+            }
+          }
+          let bestColor, maxCount = 0;
+          for (const key in colorCounts) {
+            if (colorCounts[key] > maxCount) {
+              maxCount = colorCounts[key];
+              bestColor = key.split(',').map(Number);
+            }
+          }
+          const index = (y * width + x) * 4;
+          data[index]   = bestColor[0];
+          data[index+1] = bestColor[1];
+          data[index+2] = bestColor[2];
+          data[index+3] = bestColor[3];
+        }
+      }
+    }
+
+    // ===== NEW STEP: Split Large Blobs =====
+    // For any blob that exceeds maxBlobSize, subdivide it into contiguous regions,
+    // each containing at most maxBlobSize pixels.
+    function splitLargeBlobs(labels, width, height, maxBlobSize) {
+      // Copy the labels array.
+      let newLabels = labels.slice();
+      // Precompute sizes for each original label.
+      const sizes = {};
+      for (let l of newLabels) {
+        sizes[l] = (sizes[l] || 0) + 1;
+      }
+      // Create a visited marker array.
+      const visited = new Array(newLabels.length).fill(false);
+      let nextLabel = Math.max(...newLabels) + 1;
+
+      for (let i = 0; i < newLabels.length; i++) {
+        let origLabel = newLabels[i];
+        // Only process if the blob is too large and this pixel has not yet been visited.
+        if (sizes[origLabel] > maxBlobSize && !visited[i]) {
+          // Flood fill from pixel i to get a contiguous group of at most maxBlobSize pixels.
+          let queue = [i];
+          let group = [];
+          visited[i] = true;
+          while (queue.length > 0 && group.length < maxBlobSize) {
+            const idx = queue.shift();
+            group.push(idx);
+            const x = idx % width;
+            const y = Math.floor(idx / width);
+            // 4-connected neighbors.
+            const neighbors = [];
+            if (x > 0) neighbors.push(idx - 1);
+            if (x < width - 1) neighbors.push(idx + 1);
+            if (y > 0) neighbors.push(idx - width);
+            if (y < height - 1) neighbors.push(idx + width);
+            for (let n of neighbors) {
+              if (!visited[n] && newLabels[n] === origLabel) {
+                visited[n] = true;
+                if (group.length < maxBlobSize) {
+                  queue.push(n);
+                }
+              }
+            }
+          }
+          // Assign a new label to this group.
+          const newLabel = nextLabel++;
+          for (let idx of group) {
+            newLabels[idx] = newLabel;
+          }
+        }
+      }
+      return newLabels;
+    }
+
+    // ===== Raster-to-Vector Conversion =====
+    // For each blob (given by its binary mask), extract boundary segments
+    // and chain them into a closed polygon.
+    function getBlobPathForMask(mask, width, height) {
+      let segments = [];
+      const segmentSet = new Set();
+      // Helper: add a segment if not already present.
+      function addSegment(p1, p2) {
+        const key1 = `${p1.x},${p1.y},${p2.x},${p2.y}`;
+        const key2 = `${p2.x},${p2.y},${p1.x},${p1.y}`;
+        if (!segmentSet.has(key1) && !segmentSet.has(key2)) {
+          segmentSet.add(key1);
+          segments.push({ start: p1, end: p2 });
+        }
+      }
+      // For each pixel in the blob, check its four sides.
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (mask[y * width + x]) {
+            // Each pixel covers [x, x+1] x [y, y+1].
+            // Top edge:
+            if (y === 0 || !mask[(y - 1) * width + x]) {
+              addSegment({ x: x, y: y }, { x: x + 1, y: y });
+            }
+            // Right edge:
+            if (x === width - 1 || !mask[y * width + (x + 1)]) {
+              addSegment({ x: x + 1, y: y }, { x: x + 1, y: y + 1 });
+            }
+            // Bottom edge:
+            if (y === height - 1 || !mask[(y + 1) * width + x]) {
+              addSegment({ x: x + 1, y: y + 1 }, { x: x, y: y + 1 });
+            }
+            // Left edge:
+            if (x === 0 || !mask[y * width + (x - 1)]) {
+              addSegment({ x: x, y: y + 1 }, { x: x, y: y });
+            }
+          }
+        }
+      }
+      // Chain segments into a polygon.
+      if (segments.length === 0) return null;
+      function pointKey(p) { return `${p.x},${p.y}`; }
+      function pointsEqual(p1, p2) { return p1.x === p2.x && p1.y === p2.y; }
+
+      // Build a mapping from endpoints to segments.
+      const endpointMap = {};
+      segments.forEach(seg => {
+        const keyA = pointKey(seg.start);
+        const keyB = pointKey(seg.end);
+        if (!endpointMap[keyA]) endpointMap[keyA] = [];
+        if (!endpointMap[keyB]) endpointMap[keyB] = [];
+        endpointMap[keyA].push(seg);
+        endpointMap[keyB].push(seg);
+      });
+
+      // Start with an arbitrary segment.
+      const used = new Set();
+      let currentSeg = segments[0];
+      used.add(currentSeg);
+      const polygon = [currentSeg.start, currentSeg.end];
+      let currentPoint = currentSeg.end;
+
+      // Chain segments until we loop back to the start.
+      while (true) {
+        let found = false;
+        const key = pointKey(currentPoint);
+        if (endpointMap[key]) {
+          for (const seg of endpointMap[key]) {
+            if (used.has(seg)) continue;
+            let nextPoint = pointsEqual(seg.start, currentPoint) ? seg.end : seg.start;
+            polygon.push(nextPoint);
+            used.add(seg);
+            currentPoint = nextPoint;
+            found = true;
+            break;
+          }
+        }
+        if (!found || (polygon.length > 2 && pointsEqual(currentPoint, polygon[0]))) {
+          break;
+        }
+      }
+      return polygon;
+    }
+
+    // For each unique blob label, create a boolean mask and extract its SVG path.
+    function getBlobPaths(labels, width, height) {
+      const blobMasks = {};  // label -> boolean array (length = width*height)
+      for (let i = 0; i < labels.length; i++) {
+        const label = labels[i];
+        if (!(label in blobMasks)) {
+          blobMasks[label] = new Array(width * height).fill(false);
+        }
+        blobMasks[label][i] = true;
+      }
+      const blobPaths = {};  // label -> polygon (array of points)
+      for (const label in blobMasks) {
+        const path = getBlobPathForMask(blobMasks[label], width, height);
+        if (path && path.length > 0) {
+          blobPaths[label] = path;
+        }
+      }
+      return blobPaths;
+    }
+
+    // Given a label, sample the first pixel's color in imageData.
+    function getBlobColorForLabel(label, labels, imageData, width) {
+      const data = imageData.data;
+      for (let i = 0; i < labels.length; i++) {
+        if (labels[i] == label) {
+          const idx = i * 4;
+          return [data[idx], data[idx+1], data[idx+2], data[idx+3]];
+        }
+      }
+      return [0, 0, 0, 255];
+    }
+
+    // Convert a polygon (array of points) into an SVG path "d" string.
+    function polygonToPathD(polygon) {
+      if (!polygon || polygon.length === 0) return "";
+      let d = `M ${polygon[0].x} ${polygon[0].y}`;
+      for (let i = 1; i < polygon.length; i++) {
+        d += ` L ${polygon[i].x} ${polygon[i].y}`;
+      }
+      d += " Z";
+      return d;
+    }
+
+    // ===== Main Pipeline and SVG Generation =====
+    function processImage() {
+      const canvas = document.getElementById('canvas');
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      let imageData = ctx.getImageData(0, 0, width, height);
+
+      // Step 1: Posterize the image (using 4 levels per channel).
+      posterizeImage(imageData, 4);
+      ctx.putImageData(imageData, 0, 0);
+
+      // Step 2: Connected Components Analysis.
+      let comp = labelComponents(imageData, width, height);
+      let labels = comp.labels;
+      let blobSizes = comp.blobSizes;
+
+      // Step 3: Merge small blobs (threshold: 50 pixels).
+      mergeSmallBlobs(imageData, labels, blobSizes, width, height, 50);
+      ctx.putImageData(imageData, 0, 0);
+
+      // Step 4: Smooth the image.
+      smoothImage(imageData, width, height);
+      ctx.putImageData(imageData, 0, 0);
+
+      // Re-run connected components to update labels.
+      comp = labelComponents(imageData, width, height);
+      labels = comp.labels;
+      blobSizes = comp.blobSizes;
+
+      // ===== NEW: Split blobs that exceed a maximum size =====
+      const MAX_BLOB_SIZE = 500; // Adjust as desired.
+      labels = splitLargeBlobs(labels, width, height, MAX_BLOB_SIZE);
+      // Recompute blob sizes after splitting.
+      blobSizes = {};
+      for (let l of labels) {
+        blobSizes[l] = (blobSizes[l] || 0) + 1;
+      }
+
+      // Get blob boundaries as polygons.
+      const blobPaths = getBlobPaths(labels, width, height);
+
+      // Build an SVG string.
+      let svgParts = [];
+      svgParts.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">`);
+      svgParts.push(`<rect width="100%" height="100%" fill="white"/>`);
+
+      // For each blob, create a path element.
+      for (const label in blobPaths) {
+        const polygon = blobPaths[label];
+        // Get the blob's color.
+        const color = getBlobColorForLabel(label, labels, imageData, width);
+        const fillColor = colorToRGBA(color);
+        const d = polygonToPathD(polygon);
+        svgParts.push(`<path d="${d}" fill="${fillColor}" stroke="black" stroke-width="0.5"/>`);
+      }
+      svgParts.push(`</svg>`);
+      const svgString = svgParts.join("\n");
+
+      // Insert the SVG into the page.
+      document.getElementById('svgContainer').innerHTML = svgString;
+    }
+
+    // ===== Image Loading =====
+    // Load an image file and draw it onto the hidden canvas.
+    document.getElementById('upload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0);
+        }
+        img.src = event.target.result;
+      }
+      reader.readAsDataURL(file);
+    });
+
+    // Process the image and generate the SVG when the button is clicked.
+    document.getElementById('processBtn').addEventListener('click', processImage);
+  </script>
+</body>
+</html>
+

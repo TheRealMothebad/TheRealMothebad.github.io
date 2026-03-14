@@ -1,62 +1,94 @@
 <!-- [[Photography|4]] -->
 <!DOCTYPE html>
- <!-- Look into https://developers.google.com/speed/webp/docs/using -->
-    <html lang="en">
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width">
-      <Title>Photography</Title>
-      <link rel="stylesheet" type="text/css" href="style.css" />
-      <link rel="prefetch" type="image" href="photos/Second Batch/Napkin.JPG"/>
-    </head>
-    <body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <Title>Photography</Title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="prefetch" type="image" href="photos/Second Batch/Napkin.JPG"/>
+  </head>
+  <body>
 
-<pre class="banner">John
-    Umbriac's
-           Website</pre>
-
-<hr class="title_line">
+    <form action="https://tivub.xyz/webring/prev.cgi" method="POST" style="position: absolute; left: 10px; top: 10px;">
+  <input type="hidden" name="me" value="jumbriac" />
+  <a href="#">
+    <input type="submit" name="post" value="&larr;" style="all:inherit; display:inline-block;" title="Down the Toad Hill..." />
+  </a>
+</form>
+<form action="https://tivub.xyz/webring/next.cgi" method="POST" style="position: absolute; right: 10px; top: 10px;">
+  <input type="hidden" name="me" value="jumbriac" />
+  <a href="#">
+    <input type="submit" name="post" value="&rarr;" style="all:inherit; display:inline-block;" title="Up the Toad Hill..." />
+  </a>
+</form>
 
 
 <div style="text-align: center;">
   <p class="navbar">
     <a href="index.html" class="navbutton">Home</a>
-| <a href="about.html" class="navbutton">About</a>
-| <a href="projects.html" class="navbutton">Projects</a>
-| <a href="portfolio.html" class="navbutton">Portfolio</a>
+| <a href="games.html" class="navbutton">Games</a>
+| <a href="links.html" class="navbutton">Links</a>
 | <strong class="navbutton"><u>Photography</u></strong>
 
   </p>
 </div>
 
-<script>
-  window.addEventListener("DOMContentLoaded", () => {
 
-    const elements = Array.from(document.body.querySelectorAll("p, a, u, h2, h3, code, span, pre"))
-      .filter(el => el.textContent.trim().length > 0);
+<div class="navbar">
+  <pre class="banner">
+     ██╗ ██████╗ ██╗  ██╗███╗   ██╗
+     ██║██╔═══██╗██║  ██║████╗  ██║
+     ██║██║   ██║███████║██╔██╗ ██║
+██   ██║██║   ██║██╔══██║██║╚██╗██║
+╚█████╔╝╚██████╔╝██║  ██║██║ ╚████║
+ ╚════╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═══╝</pre>
+  <pre class="banner">
+██╗   ██╗███╗   ███╗██████╗ ██████╗ ██╗ █████╗  ██████╗█╗███████╗
+██║   ██║████╗ ████║██╔══██╗██╔══██╗██║██╔══██╗██╔════╝╚╝██╔════╝
+██║   ██║██╔████╔██║██████╔╝██████╔╝██║███████║██║       ███████╗
+██║   ██║██║╚██╔╝██║██╔══██╗██╔══██╗██║██╔══██║██║       ╚════██║
+╚██████╔╝██║ ╚═╝ ██║██████╔╝██║  ██║██║██║  ██║╚██████╗  ███████║
+ ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚═╝  ╚═╝╚═╝╚═╝  ╚═╝ ╚═════╝  ╚══════╝</pre>
+  <pre class="banner">
+██╗    ██╗███████╗██████╗ ███████╗██╗████████╗███████╗
+██║    ██║██╔════╝██╔══██╗██╔════╝██║╚══██╔══╝██╔════╝
+██║ █╗ ██║█████╗  ██████╔╝███████╗██║   ██║   █████╗  
+██║███╗██║██╔══╝  ██╔══██╗╚════██║██║   ██║   ██╔══╝  
+╚███╔███╔╝███████╗██████╔╝███████║██║   ██║   ███████╗
+ ╚══╝╚══╝ ╚══════╝╚═════╝ ╚══════╝╚═╝   ╚═╝   ╚══════╝</pre>
+</div>
 
-    elements.forEach(el => el.style.visibility = "visible");
-  })
-</script>
-<style>
-  html {
-    overflow-y: scroll;
-  }
+<hr class="title_line">
 
+
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+
+        const elements = Array.from(document.body.querySelectorAll("p, a, u, h2, h3, code, span, pre"))
+          .filter(el => el.textContent.trim().length > 0);
+
+        elements.forEach(el => el.style.visibility = "visible");
+      })
+    </script>
+    <style>
   body {
     margin: 0px;
-    margin-top: 8px;
+  }
+
+  div.content {
+    flex-direction: row;
   }
 
   div.photos_sidebar {
     text-align: right;
-    width: 120px;
-    margin: auto;
+    width: 130px;
+    flex-shrink: 0;
+    margin: 0px;
     padding: 0px 5px;
-    position: fixed;
-    left: 0;
-	  display: inline-block;
+    display: inline-block;
     border-right: #d3d3d3 solid 2px;
+    align-self: flex-start;
   }
 
   .photos_sidebar > a {
@@ -66,10 +98,11 @@
   }
 
   div.photos_panel {
-    margin-left: 150px;
+    flex: 1;
+    min-height: 0;
     padding-right: 3%;
     width: auto;
-    overflow-y: scroll;
+    overflow-y: auto;
     scroll-snap-type: y mandatory;
   }
 
@@ -79,6 +112,10 @@
   }
 
   @media only screen and (max-device-width: 500px) {
+    div.content {
+      flex-direction: column;
+    }
+
     div.photos_sidebar {
       position: sticky;
       top: 0;
@@ -89,6 +126,7 @@
       border-bottom: #d3d3d3 solid 2px;
       text-align: center;
       background-color: #1c1c1c;
+      z-index: 10;
     }
 
     .photos_sidebar > a {
@@ -108,133 +146,135 @@
     }
   }
 
-</style>
+    </style>
 
-<div class="photos_sidebar">
-  <a href="#Spotlight">Spotlight</a>
-  <a href="#A Museum of Art">A Museum of Art</a>
-  <a href="#Clouds!">Clouds!</a>
-  <a href="#Second-batch">Second Batch</a>
-  <a href="#First-batch">First Batch</a>
-</div>
+    <div class="content">
+      <div class="photos_sidebar">
+        <a href="#Spotlight">Spotlight</a>
+        <a href="#A Museum of Art">A Museum of Art</a>
+        <a href="#Clouds!">Clouds!</a>
+        <a href="#Second-batch">Second Batch</a>
+        <a href="#First-batch">First Batch</a>
+      </div>
 
-<div class="photos_panel"> 
-    <p class="smol">(Hint: hover over an image to see my thoughts on it)</p>
-    <h1 id="Spotlight" class="no-top">Spotlight Pictures:</h1>
-    <p>"Paper" from <a href="#Second-batch">Second Batch</a></p>
-    <img src="photos/Second Batch/Napkin.JPG" alt="A marco shot of a napkin."
-    title="This picture is what convinced me that macro is a crutch. Zero effort produced stunning results.">
-    <hr>
-    <p>"Chlorophyllic Halo" from <a href="#Second-batch">Second Batch</a></p>
-    <img src="photos/Second Batch/Succ.JPG" alt="A very nice picture of a succulent."
-    title="Man, I just love the lighting in this picture. My only regret is not understanding ISO at this time, which is why it is so crunchy">
-    <hr>
+      <div class="photos_panel"> 
+        <p class="smol">(Hint: hover over an image to see my thoughts on it)</p>
+        <h1 id="Spotlight" class="no-top">Spotlight Pictures:</h1>
+      <p>"Paper" from <a href="#Second-batch">Second Batch</a></p>
+      <img src="photos/Second Batch/Napkin.JPG" alt="A marco shot of a napkin."
+                                                title="This picture is what convinced me that macro is a crutch. Zero effort produced stunning results.">
+      <hr>
+      <p>"Chlorophyllic Halo" from <a href="#Second-batch">Second Batch</a></p>
+      <img src="photos/Second Batch/Succ.JPG" alt="A very nice picture of a succulent."
+                                              title="Man, I just love the lighting in this picture. My only regret is not understanding ISO at this time, which is why it is so crunchy">
+      <hr>
 
-    <h1 id="A Museum of Art">"A Museum of Art"</h1>
-    <p>"Pull"</p>
-    <img src="photos/aotm/fire.JPG" alt="An aesthetic picture of a fire alarm."
-    title="It took a lot of attempts to find the right angle for this one to make the words readable.
-I also boosted the reds here a lot.">
-    <hr>
-    <p>"Orb"</p>
-    <img src="photos/aotm/disk.JPG" alt="A picture of a spherical mirror."
-    title="I love the way this picture is warped. If only there was more light in that room...">
-    <hr>
-    <p>"Overhang"</p>
-    <img src="photos/aotm/window_lights.JPG" alt="Stage lights on the ceiling."
-    title="This picture reminded me of film photography as it deals more with gradients than colors.">
-    <hr>
-    <p>"Grain"</p>
-    <img src="photos/aotm/plate.JPG" alt="A floor electrical panel on vibrant wood grain."
-    title="My camera (Canon Eos T3i) does very interesting things in low light. This is one of them.">
-    <hr>
-    <p>"Lines"</p>
-    <img src="photos/aotm/linewall.JPG" alt="A photo of a building"
-    title="This photo was an accident. I was trying to take a picture of those stairs.
-it turns out the annoying wall blocking the stairs was a much better shot">
-    <hr>
-    <p>"Stairs"</p>
-    <img src="photos/aotm/stairs.JPG" alt="A photo of stairs"
-    title="I put this photo into the editing software and just stared at it, there was nothing to change.">
-    <hr>
-    <p>"Buds"</p>
-    <img src="photos/aotm/bud.JPG" alt="A picture of buds on trees with a tower in the background."
-    title="The original intention of this picture was the buds, but they were not interesting enough so I pivoted to the tower.">
-    <hr>
+      <h1 id="A Museum of Art">"A Museum of Art"</h1>
+      <p>"Pull"</p>
+      <img src="photos/aotm/fire.JPG" alt="An aesthetic picture of a fire alarm."
+                                      title="It took a lot of attempts to find the right angle for this one to make the words readable.
+                                             I also boosted the reds here a lot.">
+      <hr>
+      <p>"Orb"</p>
+      <img src="photos/aotm/disk.JPG" alt="A picture of a spherical mirror."
+                                      title="I love the way this picture is warped. If only there was more light in that room...">
+      <hr>
+      <p>"Overhang"</p>
+      <img src="photos/aotm/window_lights.JPG" alt="Stage lights on the ceiling."
+                                               title="This picture reminded me of film photography as it deals more with gradients than colors.">
+      <hr>
+      <p>"Grain"</p>
+      <img src="photos/aotm/plate.JPG" alt="A floor electrical panel on vibrant wood grain."
+                                       title="My camera (Canon Eos T3i) does very interesting things in low light. This is one of them.">
+      <hr>
+      <p>"Lines"</p>
+      <img src="photos/aotm/linewall.JPG" alt="A photo of a building"
+                                          title="This photo was an accident. I was trying to take a picture of those stairs.
+                                                 it turns out the annoying wall blocking the stairs was a much better shot">
+      <hr>
+      <p>"Stairs"</p>
+      <img src="photos/aotm/stairs.JPG" alt="A photo of stairs"
+                                        title="I put this photo into the editing software and just stared at it, there was nothing to change.">
+      <hr>
+      <p>"Buds"</p>
+      <img src="photos/aotm/bud.JPG" alt="A picture of buds on trees with a tower in the background."
+                                     title="The original intention of this picture was the buds, but they were not interesting enough so I pivoted to the tower.">
+      <hr>
 
-    <h1 id="Clouds!">Clouds!</h1>
-    <p>"Shades of Grey"</p>
-    <img src="photos/clouds/shade-o-grey.JPG" alt="A picture of cloudy skies above a race track."
-    title="I love taking pictures of clouds. The reasons why are exemplified in this picture. They allow for a sort of unbroken uniform detail that is not often encountered.">
-    <hr>
-    <p>"Volume"</p>
-    <img src="photos/clouds/volume.JPG" alt="A picture of a remarkably volumetric cloud."
-    title="I love taking pictures of clouds. The reasons why are exemplified by this picture. They allow for a sort of unbroken uniform detail that is not often encountered.">
-    <hr>
-    <p>"False Cliff"</p>
-    <img src="photos/clouds/false_cliff.JPG" alt="A picture of volumetric clouds."
-    title="The clouds just don't fail me (well they do but you don't see those ones). I usualy turn up the contrast, and darken the image. That allows the differences in shading to be more pronounced as they now span the entirety of the grey spectrum.">
-    <hr>
-    <p>"water and air and stuff"</p>
-    <img src="photos/clouds/wat.JPG" alt="Some clouds."
-    title="yeah :)">
-    <hr>
+      <h1 id="Clouds!">Clouds!</h1>
+      <p>"Shades of Grey"</p>
+      <img src="photos/clouds/shade-o-grey.JPG" alt="A picture of cloudy skies above a race track."
+                                                title="I love taking pictures of clouds. The reasons why are exemplified in this picture. They allow for a sort of unbroken uniform detail that is not often encountered.">
+      <hr>
+      <p>"Volume"</p>
+      <img src="photos/clouds/volume.JPG" alt="A picture of a remarkably volumetric cloud."
+                                          title="I love taking pictures of clouds. The reasons why are exemplified by this picture. They allow for a sort of unbroken uniform detail that is not often encountered.">
+      <hr>
+      <p>"False Cliff"</p>
+      <img src="photos/clouds/false_cliff.JPG" alt="A picture of volumetric clouds."
+                                               title="The clouds just don't fail me (well they do but you don't see those ones). I usualy turn up the contrast, and darken the image. That allows the differences in shading to be more pronounced as they now span the entirety of the grey spectrum.">
+      <hr>
+      <p>"water and air and stuff"</p>
+      <img src="photos/clouds/wat.JPG" alt="Some clouds."
+                                       title="yeah :)">
+      <hr>
 
-    <h1 id="Second-batch">Second Batch</h1>
-    <p>"Paper"</p>
-    <img src="photos/Second Batch/Napkin.JPG" alt="A marco shot of a napkin."
-    title="This picture is what convinced me that macro is a crutch. Zero effort produced stunning results.">
-    <hr><p>"Octo Friend"</p>
-    <img src="photos/Second Batch/Octopus.JPG" alt="A picture of a small brass octopus ornament">
-    <hr><p>"Chlorophyllic Halo"</p>
-    <img src="photos/Second Batch/Planter_Box.JPG" alt="A picture of a lone planter box."
-    title="When I first took this picture, I didn't think much of it. That said, it has grown on me. 
-It seems to catch people's eye, and the framing has an aesthetic I strive to recreate.">
-    <hr><p>"Doge"</p>
-    <img src="photos/Second Batch/Sake_Doge.JPG" alt="A picture of a Shiba Inu"
-    title="The quality of this picture is significantly worse due to low light. The cuteness of the dog makes up for it though.">
-    <hr><p>"Chlorophyllic Halo"</p>
-    <img src="photos/Second Batch/Succ.JPG" alt="A very nice picture of a succulent."
-    title="Man, I just love the lighting in this picture. My only regret is not understanding ISO at this time, which is why it is so crunchy">
-    <hr>
+      <h1 id="Second-batch">Second Batch</h1>
+      <p>"Paper"</p>
+      <img src="photos/Second Batch/Napkin.JPG" alt="A marco shot of a napkin."
+                                                title="This picture is what convinced me that macro is a crutch. Zero effort produced stunning results.">
+      <hr><p>"Octo Friend"</p>
+      <img src="photos/Second Batch/Octopus.JPG" alt="A picture of a small brass octopus ornament">
+      <hr><p>"Chlorophyllic Halo"</p>
+      <img src="photos/Second Batch/Planter_Box.JPG" alt="A picture of a lone planter box."
+                                                     title="When I first took this picture, I didn't think much of it. That said, it has grown on me. 
+                                                            It seems to catch people's eye, and the framing has an aesthetic I strive to recreate.">
+      <hr><p>"Doge"</p>
+      <img src="photos/Second Batch/Sake_Doge.JPG" alt="A picture of a Shiba Inu"
+                                                   title="The quality of this picture is significantly worse due to low light. The cuteness of the dog makes up for it though.">
+      <hr><p>"Chlorophyllic Halo"</p>
+      <img src="photos/Second Batch/Succ.JPG" alt="A very nice picture of a succulent."
+                                              title="Man, I just love the lighting in this picture. My only regret is not understanding ISO at this time, which is why it is so crunchy">
+      <hr>
 
-    <h1 id="First-batch">First Batch</h1>
-    <p>"<a href="https://en.wikipedia.org/wiki/Argus_C3" target="_blank" rel="noreferrer noopener">Argus</a> Lens"</p>
-    <img src="photos/First Batch/Argus_Camera_Lens.JPG" alt="A picture of an Argus C3 Camera"
-    title="The Argus C3 was produced by the Ann Arbor based Argus Company from the 1940's to 1960's, selling ~2 million units!">
-    <hr>
-    <p>"Argus Poster"</p>
-    <img src="photos/First Batch/Argus_Poster.JPG" alt="A poster for an Argus C3 in the argus museum."
-    title="This was probably the first good picture I ever took. Lighting!!!!!">
-    <hr>
-    <p>"Sapling"</p>
-    <img src="photos/First Batch/Bush_Grass.JPG" alt="A picture of a Pine Sapling"
-    title="This picture was taken right outside the Argus building (which houses the Argus Museum).">
-    <hr>
-    <p>"Cactus"</p>
-    <img src="photos/First Batch/Cactus_Macro.JPG" alt="A detailed picture of a small cactus"
-    title="This was one of my first experiments with macro. Keep in mind these shots are all hand held!">
-    <hr>
-    <p>"Spire"</p>
-    <img src="photos/First Batch/Clouds_Tower.JPG" alt="A picture of cloud cover, with a cell tower in front of it."
-    title="I love taking pictures of clouds, this and the next one are experiments in settings for adequate capture">
-    <hr>
-    <p>"Cloud(s)"</p>
-    <img src="photos/First Batch/Clouds.JPG" alt="A picture of cloud cover ranging from dark and moody to some blue here and there">
-    <hr>
-    <p>"Lid"</p>
-    <img src="photos/First Batch/Cup_Lid_Macro.JPG" alt="A very stylized picture of a plastic lid"
-    title="Boredom was the inspiration for this one. As with all macro shots, it turned out infinitely better than it should have based on the effort put in.">
-    <hr>
-    <p>"P"</p>
-    <img src="photos/First Batch/Letter_P_Long_Exposure.JPG" alt="Multiple neon instances of the letter P"
-    title="It was too dark for normal photography, so I tried long exposure for the first time.
-It was luck that the car happened to move me in the way it did to form such a distinguishable letter.">
-    <hr>
-    <p>"Synth"</p>
-    <img src="photos/First Batch/Twirly_Lights_Long_Exposure.JPG" alt="Streaks of neon light against a black background"
-    title="This is another long exposure. Its namesake (and my personal favorite feature) is that one neon line on the middle right.">
-    <hr>
-</div>
- </body>
- </html>
+      <h1 id="First-batch">First Batch</h1>
+      <p>"<a href="https://en.wikipedia.org/wiki/Argus_C3" target="_blank" rel="noreferrer noopener">Argus</a> Lens"</p>
+      <img src="photos/First Batch/Argus_Camera_Lens.JPG" alt="A picture of an Argus C3 Camera"
+                                                          title="The Argus C3 was produced by the Ann Arbor based Argus Company from the 1940's to 1960's, selling ~2 million units!">
+      <hr>
+      <p>"Argus Poster"</p>
+      <img src="photos/First Batch/Argus_Poster.JPG" alt="A poster for an Argus C3 in the argus museum."
+                                                     title="This was probably the first good picture I ever took. Lighting!!!!!">
+      <hr>
+      <p>"Sapling"</p>
+      <img src="photos/First Batch/Bush_Grass.JPG" alt="A picture of a Pine Sapling"
+                                                   title="This picture was taken right outside the Argus building (which houses the Argus Museum).">
+      <hr>
+      <p>"Cactus"</p>
+      <img src="photos/First Batch/Cactus_Macro.JPG" alt="A detailed picture of a small cactus"
+                                                     title="This was one of my first experiments with macro. Keep in mind these shots are all hand held!">
+      <hr>
+      <p>"Spire"</p>
+      <img src="photos/First Batch/Clouds_Tower.JPG" alt="A picture of cloud cover, with a cell tower in front of it."
+                                                     title="I love taking pictures of clouds, this and the next one are experiments in settings for adequate capture">
+      <hr>
+      <p>"Cloud(s)"</p>
+      <img src="photos/First Batch/Clouds.JPG" alt="A picture of cloud cover ranging from dark and moody to some blue here and there">
+      <hr>
+      <p>"Lid"</p>
+      <img src="photos/First Batch/Cup_Lid_Macro.JPG" alt="A very stylized picture of a plastic lid"
+                                                      title="Boredom was the inspiration for this one. As with all macro shots, it turned out infinitely better than it should have based on the effort put in.">
+      <hr>
+      <p>"P"</p>
+      <img src="photos/First Batch/Letter_P_Long_Exposure.JPG" alt="Multiple neon instances of the letter P"
+                                                               title="It was too dark for normal photography, so I tried long exposure for the first time.
+                                                                      It was luck that the car happened to move me in the way it did to form such a distinguishable letter.">
+      <hr>
+      <p>"Synth"</p>
+      <img src="photos/First Batch/Twirly_Lights_Long_Exposure.JPG" alt="Streaks of neon light against a black background"
+                                                                    title="This is another long exposure. Its namesake (and my personal favorite feature) is that one neon line on the middle right.">
+      <hr>
+    </div>
+  </div>
+  </body>
+</html>

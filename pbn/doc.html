@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Posterize &amp; SVG Blobs Test</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 20px;
+    }
+    svg {
+      border: 1px solid #ccc;
+      display: block;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Posterize &amp; SVG Blobs Test</h1>
+  <p>Processing a sample image...</p>
+  <!-- Using a placeholder image. Note the crossOrigin attribute to avoid canvas tainting. -->
+  <img id="sourceImage" src="https://via.placeholder.com/300" crossOrigin="anonymous" alt="Source" style="display: none;">
+  
+  <script>
+    /**
+     * Posterize an image, segment it into color–similar regions (blobs),
+     * and return an array of SVG blob objects (with path and fill color)
+     * that have sizes between minRegionSize and maxRegionSize.
+     *
+     * @param {HTMLImageElement} image - The source image.
+     * @param {object} options - Various parameters.
+     * @param {number} options.gridSpacing - Spacing (in pixels) between initial seed points.
+     * @param {number} options.posterizeLevel - The quantization step (e.g. 32 or 64).
+     * @param {number} options.similarityThreshold - Maximum Euclidean color difference to grow a region.
+     * @param {number} options.minRegionSize - Minimum number of pixels for a region.
+     * @param {number} options.maxRegionSize - Maximum number of pixels for a region.
+     * @returns {Array<{path: string, color: string}>} Array of SVG blob objects.
+     */
+    function posterizeAndSegment(image, {
+      gridSpacing = 10,
+      posterizeLevel = 64, // e.g. levels: 0, 64, 128, 192, 256
+      similarityThreshold = 60,
+      minRegionSize = 50,
+      maxRegionSize = 10000
+    } = {}) {
+      // Create an offscreen canvas and draw the image into it.
+      const canvas = document.createElement('canvas');
+      canvas.width  = image.width;
+      canvas.height = image.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(image, 0, 0);
+      const { width, height } = canvas;
+      let imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
+    
+      // 1. Posterize the image by reducing the number of colors per channel.
+      for (let i = 0; i < data.length; i += 4) {
+        data[i]   = Math.floor(data[i]   / posterizeLevel) * posterizeLevel;
+        data[i+1] = Math.floor(data[i+1] / posterizeLevel) * posterizeLevel;
+        data[i+2] = Math.floor(data[i+2] / posterizeLevel) * posterizeLevel;
+        // alpha (data[i+3]) remains unchanged.
+      }
+      // (Optionally, you could put the posterized data back on the canvas if you wish.)
+      ctx.putImageData(imageData, 0, 0);
+    
+      // 2. Prepare a region map (one number per pixel) to keep track of which pixel belongs to which region.
+      const regionMap = new Int32Array(width * height).fill(-1);
+      const regions = [];
+      let nextRegionId = 0;
+      // Helper: Convert (x,y) to a linear index.
+      const getIndex = (x, y) => y * width + x;
+    
+      // 3. Seed the grid: at every gridSpacing, start a new region if not already assigned.
+      for (let y = 0; y < height; y += gridSpacing) {
+        for (let x = 0; x < width; x += gridSpacing) {
+          const idx = getIndex(x, y);
+          if (regionMap[idx] === -1) {
+            const offset = idx * 4;
+            const seedColor = {
+              r: data[offset],
+              g: data[offset + 1],
+              b: data[offset + 2]
+            };
+            const region = {
+              id: nextRegionId,
+              // All pixels that belong to the region.
+              pixels: [{ x, y }],
+              // Running average color.
+              avgColor: { ...seedColor },
+              // A simple FIFO queue of “border” pixels to examine.
+              queue: [{ x, y }]
+            };
+            regions.push(region);
+            regionMap[idx] = nextRegionId;
+            nextRegionId++;
+          }
+        }
+      }
+    
+      // 4. Grow each region outward from its seeds.
+      // Use 4–connected neighbors; you can also include diagonals if desired.
+      const neighbors = [
+        { dx:  1, dy:  0 },
+        { dx: -1, dy:  0 },
+        { dx:  0, dy:  1 },
+        { dx:  0, dy: -1 }
+      ];
+      let growing = true;
+      while (growing) {
+        growing = false;
+        // Process each region’s current border queue.
+        for (const region of regions) {
+          const newQueue = [];
+          for (const { x, y } of region.queue) {
+            for (const { dx, dy } of neighbors) {
+              const nx = x + dx, ny = y + dy;
+              if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
+              const nIndex = getIndex(nx, ny);
+              if (regionMap[nIndex] !== -1) continue; // Already claimed.
+              const offset = nIndex * 4;
+              const nr = data[offset],
+                    ng = data[offset + 1],
+                    nb = data[offset + 2];
+              // Compute Euclidean color difference.
+              const dr = nr - region.avgColor.r,
+                    dg = ng - region.avgColor.g,
+                    db = nb - region.avgColor.b;
+              const diff = Math.sqrt(dr * dr + dg * dg + db * db);
+              if (diff < similarityThreshold) {
+                // Claim the pixel.
+                regionMap[nIndex] = region.id;
+                region.pixels.push({ x: nx, y: ny });
+                newQueue.push({ x: nx, y: ny });
+                // Update running average (a simple incremental average).
+                const count = region.pixels.length;
+                region.avgColor.r = (region.avgColor.r * (count - 1) + nr) / count;
+                region.avgColor.g = (region.avgColor.g * (count - 1) + ng) / count;
+                region.avgColor.b = (region.avgColor.b * (count - 1) + nb) / count;
+                growing = true;
+              }
+            }
+          }
+          region.queue = newQueue;
+        }
+      }
+    
+      // 5. Filter out regions that are too small or too large.
+      const filteredRegions = regions.filter(region =>
+        region.pixels.length >= minRegionSize &&
+        region.pixels.length <= maxRegionSize
+      );
+    
+      // 6. For each remaining region, compute an SVG path for its border.
+      // Here we use a very simple (and not bullet–proof) border–tracing algorithm.
+      function regionToSVG(region) {
+        // Create a binary mask for the region.
+        const mask = [];
+        for (let y = 0; y < height; y++) {
+          mask[y] = new Array(width).fill(0);
+        }
+        for (const { x, y } of region.pixels) {
+          mask[y][x] = 1;
+        }
+        // Find a starting cell (the top–left pixel in the region).
+        let start = null;
+        for (let y = 0; y < height; y++) {
+          let found = false;
+          for (let x = 0; x < width; x++) {
+            if (mask[y][x] === 1) {
+              start = { x, y };
+              found = true;
+              break;
+            }
+          }
+          if (found) break;
+        }
+        if (!start) return "";
+    
+        // Perform a Moore–neighbor tracing to collect the border.
+        const contour = [];
+        let pos = { ...start };
+        // The 8 neighbor offsets, starting with the neighbor to the left.
+        const n8 = [
+          { dx: -1, dy:  0 },
+          { dx: -1, dy: -1 },
+          { dx:  0, dy: -1 },
+          { dx:  1, dy: -1 },
+          { dx:  1, dy:  0 },
+          { dx:  1, dy:  1 },
+          { dx:  0, dy:  1 },
+          { dx: -1, dy:  1 }
+        ];
+        let prevDir = 0;
+        do {
+          contour.push({ ...pos });
+          // Look for the next border pixel starting at the neighbor just counter–clockwise to the previous direction.
+          let found = false;
+          let dir = prevDir;
+          for (let i = 0; i < 8; i++) {
+            const idx = (dir + i) % 8;
+            const nx = pos.x + n8[idx].dx,
+                  ny = pos.y + n8[idx].dy;
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height && mask[ny][nx] === 1) {
+              // Set the new starting point and update direction.
+              pos = { x: nx, y: ny };
+              // The new search will start from the pixel “before” this one.
+              prevDir = (idx + 6) % 8;
+              found = true;
+              break;
+            }
+          }
+          if (!found) break;
+        } while (!(pos.x === start.x && pos.y === start.y));
+    
+        // Build an SVG path string from the contour.
+        if (contour.length === 0) return "";
+        let path = `M ${contour[0].x} ${contour[0].y}`;
+        for (let i = 1; i < contour.length; i++) {
+          path += ` L ${contour[i].x} ${contour[i].y}`;
+        }
+        path += " Z";
+        return path;
+      }
+    
+      // 7. Convert filtered regions into SVG blob objects.
+      const svgBlobs = filteredRegions.map(region => {
+        const path = regionToSVG(region);
+        // Use the (rounded) average color as the fill.
+        const fill = `rgb(${Math.round(region.avgColor.r)}, ${Math.round(region.avgColor.g)}, ${Math.round(region.avgColor.b)})`;
+        return { path, color: fill };
+      });
+    
+      return svgBlobs;
+    }
+    
+    /* ===== Usage Example =====
+      Assume you have an <img id="sourceImage"> element on your page.
+    ---------------------------- */
+    window.addEventListener('load', () => {
+      const img = document.getElementById('sourceImage');
+      // Wait until the image is loaded.
+      if (!img.complete) {
+        img.onload = processImage;
+      } else {
+        processImage();
+      }
+      
+      function processImage() {
+        const blobs = posterizeAndSegment(img, {
+          gridSpacing: 10,
+          posterizeLevel: 64,
+          similarityThreshold: 60,
+          minRegionSize: 50,
+          maxRegionSize: 10000
+        });
+        
+        // Create an SVG element to display the blobs.
+        const svgNS = "http://www.w3.org/2000/svg";
+        const svg = document.createElementNS(svgNS, "svg");
+        svg.setAttribute("width", img.width);
+        svg.setAttribute("height", img.height);
+        svg.style.border = "1px solid #ccc";
+        
+        for (const blob of blobs) {
+          if (!blob.path) continue;
+          const pathEl = document.createElementNS(svgNS, "path");
+          pathEl.setAttribute("d", blob.path);
+          pathEl.setAttribute("fill", blob.color);
+          pathEl.setAttribute("stroke", "#333");
+          pathEl.setAttribute("stroke-width", "1");
+          svg.appendChild(pathEl);
+        }
+        // Append the SVG to the body.
+        document.body.appendChild(svg);
+      }
+    });
+  </script>
+</body>
+</html>
+

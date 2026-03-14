@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SVG Toggle</title>
+  <style>
+    svg {
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+<svg width="200" height="100" id="mySvg">
+  <rect x="10" y="10" width="80" height="30" fill="red" class="toggleable" />
+  <rect x="10" y="50" width="80" height="30" fill="red" class="toggleable" />
+</svg>
+
+<script>
+  // Function to toggle the fill color of the clicked rectangle
+  function toggleFill() {
+    const fillColor = this.getAttribute('fill');
+    this.setAttribute('fill', fillColor === 'red' ? 'green' : 'red');
+  }
+
+  // Add click event listeners to all elements with the class 'toggleable'
+  const toggleableElements = document.querySelectorAll('.toggleable');
+  toggleableElements.forEach(element => {
+    element.addEventListener('click', toggleFill);
+  });
+</script>
+
+</body>
+</html>
