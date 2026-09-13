@@ -146,26 +146,32 @@ function handleKeyPress() {
   switch (key) {
     case "ArrowUp":
     case "w":
+    case "W":
       dir = up
       break;
     case "ArrowDown":
     case "s":
+    case "S":
       dir = down
       break;
     case "ArrowLeft":
     case "a":
+    case "A":
       dir = left
       break;
     case "ArrowRight":
     case "d":
+    case "D":
       dir = right
       break;
     case "z":
     case ",":
+    case "Z":
       rot = -1
       break;
     case "x":
     case ".":
+    case "X":
       rot = 1
       break;
     case "p":
